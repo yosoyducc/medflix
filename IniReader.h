@@ -40,9 +40,9 @@ typedef
 
 class IniReader {
   private:
-    std::string    fileName;
-    IniSections    sections;
-    IniProperties  properties;
+    std::string    fileName;    // origin file name
+    IniSections    sections;    // ini section names
+    IniProperties  properties;  // all key-value pairs
 
   public:
     // === IniReader ======================================================
@@ -91,7 +91,7 @@ class IniReader {
     // Returns:
     //      number of sections
     // ====================================================================
-    size_t getSectionCount();
+    int getSectionCount();
 
     // === getPropertyCount ===============================================
     // Get the number of properties in the ini.
@@ -101,10 +101,11 @@ class IniReader {
     // Returns:
     //      number of properties
     // ====================================================================
-    size_t getPropertyCount();
+    int getPropertyCount();
 
     // === getSections ====================================================
-    // Get all section data.
+    // Get all section data. Returns a reference to the internal
+    // IniSections type.
     //
     // Parameters:
     //      none
@@ -114,12 +115,13 @@ class IniReader {
     IniSections const *getSections();
 
     // === getProperties ==================================================
-    // Get all property data.
+    // Get all property data. Returns a reference to the internal
+    // IniProperties type.
     //
     // Parameters:
     //      none
     // Returns:
-    //      IniSections pointer
+    //      IniProperties pointer
     // ====================================================================
     IniProperties const *getProperties();
 };
