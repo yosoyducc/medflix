@@ -115,6 +115,30 @@ IniReader::~IniReader()
     //properties.clear();
 }
 
+
+/**** Sections-related functions ****/
+
+int IniReader::getSectionCount()
+{
+    // Get the number of sections
+    return sections.size();
+}
+
+string const *IniReader::getSectionName(int section)
+{
+    // Only return the reference if index is valid
+    if (section < getSectionCount())
+        return &sections[section];
+
+    return nullptr;
+}
+
+IniSections const *IniReader::getSections()
+{
+    // Get reference to internal sections
+    return &sections;
+}
+
 int IniReader::addSection(string const &name)
 {
     // Check if the name is empty
@@ -128,34 +152,30 @@ int IniReader::addSection(string const &name)
     return -1;
 }
 
+
+/**** Key-value/properties related functions ****/
+
+int IniReader::getPropertyCount()
+{
+    // Get number of properties
+    return properties.size();
+}
+
+string const *IniReader::getPropertyName(int section, int property)
+{
+    return nullptr;
+}
+
+IniProperties const *IniReader::getProperties()
+{
+    // Get reference to internal properties
+    return &properties;
+}
+
 void IniReader::addProperty(int section, const string &key, const string &value)
 {
     // Before constructing the IniProperty pair at the end of `properties`,
     // make sure name isn't empty and section isn't absurd
     if (!key.empty() && section >= 0 && section < getSectionCount())
         properties.emplace_back(section, make_pair(key, value));
-}
-
-// Get reference to internal sections
-IniSections const *IniReader::getSections()
-{
-    return &sections;
-}
-
-// Get reference to internal properties
-IniProperties const *IniReader::getProperties()
-{
-    return &properties;
-}
-
-// Get number of sections
-int IniReader::getSectionCount()
-{
-    return sections.size();
-}
-
-// Get number of properties
-int IniReader::getPropertyCount()
-{
-    return properties.size();
 }

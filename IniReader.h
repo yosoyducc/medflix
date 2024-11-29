@@ -39,11 +39,6 @@ typedef
 
 
 class IniReader {
-  private:
-    std::string    fileName;    // origin file name
-    IniSections    sections;    // ini section names
-    IniProperties  properties;  // all key-value pairs
-
   public:
     // === IniReader ======================================================
     // Creates an empty INI object in memory.
@@ -63,25 +58,6 @@ class IniReader {
     // ====================================================================
     ~IniReader();
 
-    // === addSection =====================================================
-    // Adds a section.
-    //
-    // Parameters:
-    //      string section name
-    // Returns:
-    //      section number
-    // ====================================================================
-    int addSection(std::string const &name);
-
-    // === addProperty ====================================================
-    // Adds a property into a section. Specify 0 for the global area
-    //
-    // Parameters:
-    //      section id
-    // Returns:
-    //      nothing
-    // ====================================================================
-    void addProperty(int section, std::string const &key, std::string const &value);
 
     // === getSectionCount ================================================
     // Get the number of sections in the ini.
@@ -93,6 +69,38 @@ class IniReader {
     // ====================================================================
     int getSectionCount();
 
+    // === getSectionName =================================================
+    // Given a section index, return a pointer to its name.
+    //
+    // Parameters:
+    //      int index of section
+    // Returns:
+    //      number of sections
+    // ====================================================================
+    std::string const *getSectionName(int section);
+
+    // === getSections ====================================================
+    // Get all section data. Returns a reference to the internal
+    // IniSections type, which is essentially a vector of strings.
+    //
+    // Parameters:
+    //      none
+    // Returns:
+    //      IniSections pointer
+    // ====================================================================
+    IniSections const *getSections();
+
+    // === addSection =====================================================
+    // Adds a section.
+    //
+    // Parameters:
+    //      string section name
+    // Returns:
+    //      section number
+    // ====================================================================
+    int addSection(std::string const &name);
+
+
     // === getPropertyCount ===============================================
     // Get the number of properties in the ini.
     //
@@ -103,16 +111,15 @@ class IniReader {
     // ====================================================================
     int getPropertyCount();
 
-    // === getSections ====================================================
-    // Get all section data. Returns a reference to the internal
-    // IniSections type.
+    // === getPropertyName ================================================
+    // Given a section and property index, return a pointer to key name.
     //
     // Parameters:
-    //      none
+    //      int index of section
     // Returns:
-    //      IniSections pointer
+    //      number of sections
     // ====================================================================
-    IniSections const *getSections();
+    std::string const *getPropertyName(int section, int property);
 
     // === getProperties ==================================================
     // Get all property data. Returns a reference to the internal
@@ -124,4 +131,19 @@ class IniReader {
     //      IniProperties pointer
     // ====================================================================
     IniProperties const *getProperties();
+
+    // === addProperty ====================================================
+    // Adds a property into a section. Specify 0 for the global area
+    //
+    // Parameters:
+    //      section id
+    // Returns:
+    //      nothing
+    // ====================================================================
+    void addProperty(int section, std::string const &key, std::string const &value);
+
+  private:
+    std::string    fileName;    // origin file name
+    IniSections    sections;    // ini section names
+    IniProperties  properties;  // all key-value pairs
 };
