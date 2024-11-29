@@ -43,7 +43,7 @@ IniReader::IniReader(string const &fileName) : IniReader()
     // Read each line of the file and load into object
     while (getline(f, buf)) {
         size_t cur = 0;     // cursor: where in the line?
-        int const bufLen = buf.length();
+        size_t const bufLen = buf.length();
         // Find first non-whitespace character
         while (cur < bufLen && buf[cur] <= ' ')
             ++cur;
@@ -58,38 +58,44 @@ IniReader::IniReader(string const &fileName) : IniReader()
         // Check if this line is a section header
         else if (buf[cur] == '[') {
             size_t start = ++cur;   // beginning of section name
-            while (cur < bufLen && buf[++cur] != ']');
+            while (++cur < bufLen && buf[cur] != ']');
 
             // End of section name
-            if (buf[cur] == ']') {
-                sect = addSection(buf.substr(start, cur - 1));
-            }
+            if (buf[cur] == ']')
+                sect = addSection(buf.substr(start, cur - start));
         } else {    // Otherwise it's a key-value pair (properties)
-            size_t keyStart = cur;      // beginnning of property
-            while (cur < bufLen && buf[++cur] != '=');
+            size_t keyStart  = cur;     // beginnning of property
+            size_t keyLength = 1;       // assume key is size 1
+            while (cur < bufLen && buf[++cur] != '=')
+                ++keyLength;
 
             if (buf[cur] == '=') {
-                size_t keyEnd = cur - 1;
-                // Skip equals sign
-                ++cur;
                 // Find last non-whitespace character in key,
                 // hereby defining the key string size
-                while (keyEnd > 0 && buf[--keyEnd - 1] <= ' ');
+                size_t keyEnd = keyStart + keyLength;
+                while (keyLength > 0 && buf[keyEnd-- - 1] <= ' ')
+                    --keyLength;
 
                 // Find first non-whitespace character in value
-                while (cur < bufLen && buf[++cur] <= ' ');
+                ++cur;      // Skip equals sign
+                while (cur < bufLen && buf[cur] <= ' ')
+                    ++cur;
                 size_t valueStart = cur;
-                // Find the end of the value
-                while (++cur < bufLen);
-                // Do not include trailing whitespace characters
-                size_t valueSize = cur;
-                while (valueSize >= valueStart && buf[--valueSize] <= ' ');
+
+                // Navigate to the end of the value
+                cur = bufLen;
+                // Exclude trailing whitespace characters
+                while (cur >= valueStart && buf[cur] <= ' ')
+                    --cur;
+
+                // Determine length of value
+                size_t valueLength = cur - valueStart + 1;
 
                 // If value doesn't exist (length zero)
-                if (cur == valueStart)
-                    addProperty(sect, buf.substr(keyStart, keyEnd), "");
+                if (valueLength < 1)
+                    addProperty(sect, buf.substr(keyStart, keyLength), "");
                 else
-                    addProperty(sect, buf.substr(keyStart, keyEnd), buf.substr(valueStart, cur - 1));
+                    addProperty(sect, buf.substr(keyStart, keyLength), buf.substr(valueStart, valueLength));
             }
         }
     }
@@ -97,7 +103,10 @@ IniReader::IniReader(string const &fileName) : IniReader()
 
 IniReader::~IniReader()
 {
-    
+    // no need for the below
+    //fileName.clear();
+    //sections.clear();
+    //properties.clear();
 }
 
 int IniReader::addSection(string const &name)
@@ -113,7 +122,7 @@ int IniReader::addSection(string const &name)
     return -1;
 }
 
-void IniReader::addProperty(int section, const std::string &key, const std::string &value)
+void IniReader::addProperty(int section, const string &key, const string &value)
 {
     // Before constructing the IniProperty pair at the end of `properties`,
     // make sure name isn't empty and section isn't absurd
