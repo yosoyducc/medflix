@@ -19,11 +19,17 @@
 #include <iostream>
 #include <utility>
 
+// How much memory should be allocated for internal variables
+#define INI_SECTION_RESERVE  128
+#define INI_PROPERTY_RESERVE 1024
+
 using namespace std;
 
 IniReader::IniReader()
 {
-    // Initialize global section
+    sections.reserve(INI_SECTION_RESERVE);
+    properties.reserve(INI_PROPERTY_RESERVE);
+
     sections.push_back("");
 }
 
