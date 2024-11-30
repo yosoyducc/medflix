@@ -116,6 +116,21 @@ IniReader::~IniReader()
     //properties.clear();
 }
 
+bool IniReader::write()
+{
+    // Check to see if there is an origin file name
+    if (fileName.empty())
+        return false;
+
+    return write(fileName);
+}
+
+bool IniReader::write(string const &fileName)
+{
+    // TODO: implement write
+    return false;
+}
+
 bool IniReader::empty()
 {
     return sections.empty() && properties.empty();
@@ -217,7 +232,7 @@ void IniReader::addProperty(int section, const string &key, const string &value)
 int IniReader::findProperty(int section, std::string const &name)
 {
     // Verify that everything is sane
-    if (section >= 0 && section < getSectionCount()) {
+    if (!name.empty() && section >= 0 && section < getSectionCount()) {
         int prop = 0;   // return value (index of property in section)
         // Iterate through all the properties
         for (int i = 0; i < getPropertyCount(); ++i) {
