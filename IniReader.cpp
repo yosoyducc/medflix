@@ -2,7 +2,7 @@
 // File: IniReader.h
 // =============================================================================
 //
-// Programmers: Filip Vracevic
+// Programmers: Aiden Asar, Filip Vracevic
 // Class: CS 1D
 // Instructor: Med Mogasemi
 //
