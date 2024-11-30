@@ -214,7 +214,7 @@ int IniReader::findSection(string const &name)
 void IniReader::setSectionName(int section, const std::string &name)
 {
     // Set the section name to passed string if valid section of course
-    if (!name.empty() && section >= 0 && section < getSectionCount()) {
+    if (!name.empty() && section >= 1 && section < getSectionCount()) {
         sections[section] = name;
     }
 }
