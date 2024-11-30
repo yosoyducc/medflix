@@ -242,6 +242,20 @@ class IniReader {
     void dropProperty(int section, int property);
 
 
+    /**** Overloaded operators, for synctactical candy ****/
+
+    // === operator(int, int) =============================================
+    // Returns the value from property located at section.
+    // ====================================================================
+    std::string const &operator()(int section, int property);
+
+    // === operator(string, string) =======================================
+    // Returns the value from property located at a section name
+    // and a property key name.
+    // ====================================================================
+    std::string const &operator()(std::string const &section, std::string const &key);
+
+
   private:
     std::string    fileName;    // origin file name
     IniSections    sections;    // ini section names

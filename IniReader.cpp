@@ -341,6 +341,21 @@ void IniReader::dropProperty(int section, int property)
 }
 
 
+/**** Overloaded operators ****/
+
+std::string const &IniReader::operator()(int section, int property)
+{
+    return getPropertyValue(section, property);
+}
+
+std::string const &IniReader::operator()(std::string const &section, std::string const &key)
+{
+    int s = findSection(section);
+    int p = findProperty(s, key);
+    return getPropertyValue(s, p);
+}
+
+
 /**** Private implementation ****/
 
 std::string const IniReader::ZEROSTR = "";
