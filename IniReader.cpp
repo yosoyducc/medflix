@@ -16,6 +16,7 @@
 
 #include "IniReader.h"
 #include <fstream>
+#include <sstream>
 
 // How much memory should be allocated for internal variables
 #define INI_SECTION_RESERVE  128
@@ -127,8 +128,38 @@ bool IniReader::write()
 
 bool IniReader::write(string const &fileName)
 {
-    // TODO: implement write
-    return false;
+    // Return false if no file name
+    if (fileName.empty())
+        return false;
+
+    // Try opening file and check if it's open
+    ofstream f(fileName);
+    if (!f.is_open())
+        return false;
+
+    // For every section in the object
+    for (int s = 0; s < getSectionCount(); ++s) {
+        // Check if this section's name isn't empty
+        // If so, write [section] tag
+        if (!sections[s].empty())
+            f << '[' << sections[s] << "]\n";
+
+        // For all properties that match this section,
+        // write the key-value pairs to the stream
+        for (int p = 0; p < getPropertyCount(); ++p) {
+            if (properties[p].first == s) {
+                f << properties[p].second.first << '='
+                  << properties[p].second.second << '\n';
+            }
+        }
+
+        // Write a newline after every section
+        f << '\n';
+    }
+
+    // We wrote to the file in some capacity.
+    // No guarantee it wrote the correct amount of data though...
+    return true;
 }
 
 bool IniReader::empty()
