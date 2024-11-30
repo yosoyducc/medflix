@@ -7,11 +7,11 @@ int main()
 {
     IniReader ini("test.ini");
 
-    IniSections const sect = ini.getSections();
-    IniProperties const prop = ini.getProperties();
+    /*IniSections const sect = ini.getSections();
+    IniProperties const prop = ini.getProperties();*/
 
-    cout << "Size 1: " << sect.size() << endl;
-    cout << "Size 2: " << prop.size() << endl;
+    cout << "Sections count:   " << ini.getSectionCount()  << endl;
+    cout << "Properties count: " << ini.getPropertyCount() << endl;
 
     int sec = ini.findSection("goodbye to a world");
     int pro = ini.findProperty(sec, "LA_SEINE");
