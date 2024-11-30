@@ -126,19 +126,19 @@ int IniReader::getSectionCount() const
     return sections.size();
 }
 
-string const *IniReader::getSectionName(int section)
+string const &IniReader::getSectionName(int section)
 {
     // Only return the reference if index is valid
     if (section < getSectionCount())
-        return &sections[section];
+        return sections[section];
 
-    return nullptr;
+    return ZEROSTR;
 }
 
-IniSections const *IniReader::getSections()
+IniSections const &IniReader::getSections()
 {
     // Get reference to internal sections
-    return &sections;
+    return sections;
 }
 
 int IniReader::addSection(string const &name)
@@ -175,32 +175,32 @@ int IniReader::getPropertyCount() const
     return properties.size();
 }
 
-string const *IniReader::getPropertyKey(int section, int property)
+string const &IniReader::getPropertyKey(int section, int property)
 {
     if (section >= 0 && section < getSectionCount()) {
         // If property was found
         int _prop = _propertyIndex(section, property);
         if (_prop != -1)
-            return &properties[_prop].second.first;
+            return properties[_prop].second.first;
     }
-    return nullptr;     // Return nothing if invalid :(
+    return ZEROSTR;     // Return nothing if invalid :(
 }
 
-string const *IniReader::getPropertyValue(int section, int property)
+string const &IniReader::getPropertyValue(int section, int property)
 {
     // Same code as above but different return
     if (section >= 0 && section < getSectionCount()) {
         int _prop = _propertyIndex(section, property);
         if (_prop != -1)
-            return &properties[_prop].second.second;
+            return properties[_prop].second.second;
     }
-    return nullptr;
+    return ZEROSTR;
 }
 
-IniProperties const *IniReader::getProperties()
+IniProperties const &IniReader::getProperties()
 {
     // Get reference to internal properties
-    return &properties;
+    return properties;
 }
 
 void IniReader::addProperty(int section, const string &key, const string &value)
@@ -232,6 +232,8 @@ int IniReader::findProperty(int section, std::string const &name)
 
 
 /**** Private implementation ****/
+
+std::string const IniReader::ZEROSTR = "";
 
 int IniReader::_propertyIndex(int section, int property)
 {

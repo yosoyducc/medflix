@@ -102,7 +102,7 @@ class IniReader {
     // Returns:
     //      number of sections
     // ====================================================================
-    std::string const *getSectionName(int section);
+    std::string const &getSectionName(int section);
 
     // === getSections ====================================================
     // Get all section data. Returns a reference to the internal
@@ -111,9 +111,9 @@ class IniReader {
     // Parameters:
     //      none
     // Returns:
-    //      IniSections pointer
+    //      IniSections reference
     // ====================================================================
-    IniSections const *getSections();
+    IniSections const &getSections();
 
     // === addSection =====================================================
     // Adds a section.
@@ -175,9 +175,9 @@ class IniReader {
     // Parameters:
     //      int index of section and property
     // Returns:
-    //      pointer to string containing key name
+    //      reference to string containing key name
     // ====================================================================
-    std::string const *getPropertyKey(int section, int property);
+    std::string const &getPropertyKey(int section, int property);
 
     // === getPropertyValue ===============================================
     // Given a section and property index, return a pointer to value name.
@@ -185,9 +185,9 @@ class IniReader {
     // Parameters:
     //      int index of section and property
     // Returns:
-    //      pointer to string containing value name
+    //      reference to string containing value name
     // ====================================================================
-    std::string const *getPropertyValue(int section, int property);
+    std::string const &getPropertyValue(int section, int property);
 
     // === getProperties ==================================================
     // Get all property data. Returns a reference to the internal
@@ -196,9 +196,9 @@ class IniReader {
     // Parameters:
     //      none
     // Returns:
-    //      IniProperties pointer
+    //      IniProperties reference
     // ====================================================================
-    IniProperties const *getProperties();
+    IniProperties const &getProperties();
 
     // === addProperty ====================================================
     // Adds a property into a section. Specify 0 for the global area
@@ -256,6 +256,9 @@ class IniReader {
     std::string    fileName;    // origin file name
     IniSections    sections;    // ini section names
     IniProperties  properties;  // all key-value pairs
+
+    // for returning on reference-returning functions
+    static std::string const ZEROSTR;
 
     // === _propertyIndex =================================================
     // Get the global index of a key-value property in `properties`.
