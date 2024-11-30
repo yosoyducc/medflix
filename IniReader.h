@@ -59,6 +59,16 @@ class IniReader {
     ~IniReader();
 
 
+    // === empty ==========================================================
+    // Returns true if the current object is devoid of life.
+    //
+    // Parameters:
+    //      none
+    // Returns:
+    //      boolean truth value
+    // ====================================================================
+    bool empty();
+
     // === getSectionCount ================================================
     // Get the number of sections in the ini.
     //
@@ -67,7 +77,7 @@ class IniReader {
     // Returns:
     //      number of sections
     // ====================================================================
-    int getSectionCount();
+    int getSectionCount() const;
 
     // === getSectionName =================================================
     // Given a section index, return a pointer to its name.
@@ -109,7 +119,7 @@ class IniReader {
     // Returns:
     //      number of properties
     // ====================================================================
-    int getPropertyCount();
+    int getPropertyCount() const;
 
     // === getPropertyName ================================================
     // Given a section and property index, return a pointer to key name.
@@ -146,4 +156,16 @@ class IniReader {
     std::string    fileName;    // origin file name
     IniSections    sections;    // ini section names
     IniProperties  properties;  // all key-value pairs
+
+    // === _propertyIndex =================================================
+    // Get the global index of a key-value property in `properties`.
+    // The global index is the index of this property disregarding offsets
+    // like the section index. Only used internally.
+    //
+    // Parameters:
+    //      int section and property
+    // Returns:
+    //      index of the property
+    // ====================================================================
+    int _propertyIndex(int section, int property);
 };

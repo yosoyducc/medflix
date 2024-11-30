@@ -115,10 +115,14 @@ IniReader::~IniReader()
     //properties.clear();
 }
 
+bool IniReader::empty()
+{
+    return sections.empty() && properties.empty();
+}
 
 /**** Sections-related functions ****/
 
-int IniReader::getSectionCount()
+int IniReader::getSectionCount() const
 {
     // Get the number of sections
     return sections.size();
@@ -155,7 +159,7 @@ int IniReader::addSection(string const &name)
 
 /**** Key-value/properties related functions ****/
 
-int IniReader::getPropertyCount()
+int IniReader::getPropertyCount() const
 {
     // Get number of properties
     return properties.size();
@@ -163,6 +167,11 @@ int IniReader::getPropertyCount()
 
 string const *IniReader::getPropertyName(int section, int property)
 {
+    if (section >= 0 && section < getSectionCount()) {
+        int _prop = _propertyIndex(section, property);
+        if (_prop != -1)
+            return &properties[_prop].second.first;
+    }
     return nullptr;
 }
 
@@ -178,4 +187,24 @@ void IniReader::addProperty(int section, const string &key, const string &value)
     // make sure name isn't empty and section isn't absurd
     if (!key.empty() && section >= 0 && section < getSectionCount())
         properties.emplace_back(section, make_pair(key, value));
+}
+
+
+/**** Private implementation ****/
+
+int IniReader::_propertyIndex(int section, int property)
+{
+    // Check to see if section specified is valid
+    if (section >= 0 && section < getSectionCount()) {
+        int _prop = 0;
+        // Search through all properties
+        for (int i = 0; i < getPropertyCount(); ++i) {
+            if (properties[i].first == section) {
+                if (_prop == property)
+                    return i;   // It is this local prop! Return global index
+                ++_prop;        // It wasn't this property, iterate
+            }
+        }
+    }
+    return -1;      // It wasn't found :(
 }
