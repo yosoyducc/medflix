@@ -137,7 +137,7 @@ class IniReader {
 
     // === dropSection ====================================================
     // Remove an entire section from the ini, including all key-values
-    // that fall under it. (Not implemented)
+    // that fall under it.
     //
     // Parameters:
     //      int section
@@ -232,7 +232,7 @@ class IniReader {
     void setPropertyValue(int section, int property, std::string const &value);
 
     // === dropProperty ===================================================
-    // Remove a key-value pair property. (Not implemented)
+    // Remove a key-value pair property.
     //
     // Parameters:
     //      int section, int property
