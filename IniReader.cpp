@@ -57,7 +57,7 @@ IniReader::IniReader(string const &fileName) : IniReader()
             continue;
 
         // Check if this line is a comment
-        if (buf[cur] == ';')
+        if (buf[cur] == ';' || buf[cur] == '#')
             continue;
         // Check if this line is a section header
         else if (buf[cur] == '[') {
