@@ -58,6 +58,18 @@ class IniReader {
     // ====================================================================
     ~IniReader();
 
+    // === write ==========================================================
+    // Write the ini object to the file. If no parameters are specified,
+    // the default file will be written. On successful write, returns true.
+    // If default file not found, false is returned.
+    //
+    // Parameters:
+    //      none OR string fileName
+    // Returns:
+    //      boolean truth
+    // ====================================================================
+    bool write();
+    bool write(std::string const &fileName);
 
     // === empty ==========================================================
     // Returns true if the current object is devoid of life.
@@ -68,6 +80,9 @@ class IniReader {
     //      boolean truth value
     // ====================================================================
     bool empty();
+
+
+    /**** Sections-related functions ****/
 
     // === getSectionCount ================================================
     // Get the number of sections in the ini.
@@ -120,6 +135,29 @@ class IniReader {
     // ====================================================================
     int findSection(std::string const &name);
 
+    // === setSectionName =================================================
+    // Set/rename a section. (Not implemented)
+    //
+    // Parameters:
+    //      int section, string name
+    // Returns:
+    //      void
+    // ====================================================================
+    void setSectionName(int section, std::string const &name);
+
+    // === dropSection ====================================================
+    // Remove an entire section from the ini, including all key-values
+    // that fall under it. (Not implemented)
+    //
+    // Parameters:
+    //      int section
+    // Returns:
+    //      void
+    // ====================================================================
+    void dropSection(int section);
+
+
+    /**** Key-value/properties related functions ****/
 
     // === getPropertyCount ===============================================
     // Get the number of key/value pairs in the ini.
@@ -182,6 +220,37 @@ class IniReader {
     //      index of the property
     // ====================================================================
     int findProperty(int section, std::string const &name);
+
+    // === setPropertyKey =================================================
+    // Set/rename a property key. (Not implemented)
+    //
+    // Parameters:
+    //      int section, int property, string name
+    // Returns:
+    //      void
+    // ====================================================================
+    void setPropertyKey(int section, int property, std::string const &key);
+
+    // === setPropertyValue ===============================================
+    // Set/rename a property value. (Not implemented)
+    //
+    // Parameters:
+    //      int section, int property, string name
+    // Returns:
+    //      void
+    // ====================================================================
+    void setPropertyValue(int section, int property, std::string const &value);
+
+    // === dropProperty ===================================================
+    // Remove a key-value pair property. (Not implemented)
+    //
+    // Parameters:
+    //      int section, int property
+    // Returns:
+    //      void
+    // ====================================================================
+    void dropProperty(int section, int property);
+
 
   private:
     std::string    fileName;    // origin file name
