@@ -162,10 +162,6 @@ bool IniReader::write(string const &fileName)
     return true;
 }
 
-bool IniReader::empty()
-{
-    return sections.empty() && properties.empty();
-}
 
 /**** Sections-related functions ****/
 

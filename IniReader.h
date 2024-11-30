@@ -71,16 +71,6 @@ class IniReader {
     bool write();
     bool write(std::string const &fileName);
 
-    // === empty ==========================================================
-    // Returns true if the current object is devoid of life.
-    //
-    // Parameters:
-    //      none
-    // Returns:
-    //      boolean truth value
-    // ====================================================================
-    bool empty();
-
 
     /**** Sections-related functions ****/
 
