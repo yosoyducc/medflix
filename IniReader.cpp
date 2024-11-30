@@ -16,8 +16,6 @@
 
 #include "IniReader.h"
 #include <fstream>
-#include <iostream>
-#include <utility>
 
 // How much memory should be allocated for internal variables
 #define INI_SECTION_RESERVE  128
@@ -165,13 +163,24 @@ int IniReader::getPropertyCount() const
     return properties.size();
 }
 
-string const *IniReader::getPropertyName(int section, int property)
+string const *IniReader::getPropertyKey(int section, int property)
 {
     if (section >= 0 && section < getSectionCount()) {
         // If property was found
         int _prop = _propertyIndex(section, property);
         if (_prop != -1)
             return &properties[_prop].second.first;
+    }
+    return nullptr;     // Return nothing if invalid :(
+}
+
+string const *IniReader::getPropertyValue(int section, int property)
+{
+    // Same code as above but different return
+    if (section >= 0 && section < getSectionCount()) {
+        int _prop = _propertyIndex(section, property);
+        if (_prop != -1)
+            return &properties[_prop].second.second;
     }
     return nullptr;
 }

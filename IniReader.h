@@ -112,7 +112,7 @@ class IniReader {
 
 
     // === getPropertyCount ===============================================
-    // Get the number of properties in the ini.
+    // Get the number of key/value pairs in the ini.
     //
     // Parameters:
     //      none
@@ -121,15 +121,25 @@ class IniReader {
     // ====================================================================
     int getPropertyCount() const;
 
-    // === getPropertyName ================================================
+    // === getPropertyKey =================================================
     // Given a section and property index, return a pointer to key name.
     //
     // Parameters:
-    //      int index of section
+    //      int index of section and property
     // Returns:
-    //      number of sections
+    //      pointer to string containing key name
     // ====================================================================
-    std::string const *getPropertyName(int section, int property);
+    std::string const *getPropertyKey(int section, int property);
+
+    // === getPropertyValue ===============================================
+    // Given a section and property index, return a pointer to value name.
+    //
+    // Parameters:
+    //      int index of section and property
+    // Returns:
+    //      pointer to string containing value name
+    // ====================================================================
+    std::string const *getPropertyValue(int section, int property);
 
     // === getProperties ==================================================
     // Get all property data. Returns a reference to the internal
