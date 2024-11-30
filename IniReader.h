@@ -126,7 +126,7 @@ class IniReader {
     int findSection(std::string const &name);
 
     // === setSectionName =================================================
-    // Set/rename a section. (Not implemented)
+    // Set/rename a section.
     //
     // Parameters:
     //      int section, string name
@@ -212,7 +212,7 @@ class IniReader {
     int findProperty(int section, std::string const &name);
 
     // === setPropertyKey =================================================
-    // Set/rename a property key. (Not implemented)
+    // Set/rename a property key.
     //
     // Parameters:
     //      int section, int property, string name
@@ -222,7 +222,7 @@ class IniReader {
     void setPropertyKey(int section, int property, std::string const &key);
 
     // === setPropertyValue ===============================================
-    // Set/rename a property value. (Not implemented)
+    // Set/rename a property value.
     //
     // Parameters:
     //      int section, int property, string name

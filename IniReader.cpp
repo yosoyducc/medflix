@@ -211,6 +211,13 @@ int IniReader::findSection(string const &name)
     return -1;  // We didn't find the section :(
 }
 
+void IniReader::setSectionName(int section, const std::string &name)
+{
+    // Set the section name to passed string if valid section of course
+    if (!name.empty() && section >= 0 && section < getSectionCount()) {
+        sections[section] = name;
+    }
+}
 
 /**** Key-value/properties related functions ****/
 
@@ -275,6 +282,29 @@ int IniReader::findProperty(int section, std::string const &name)
     return -1;  // Couldn't find the property :(
 }
 
+void IniReader::setPropertyKey(int section, int property, std::string const &key)
+{
+    if (!key.empty() && section >= 0 && section < getSectionCount()) {
+        int _prop = _propertyIndex(section, property);
+        if (_prop == -1)
+            return;
+
+        // Replace the old key name with the new key name: first is key
+        properties[_prop].second.first = key;
+    }
+}
+
+void IniReader::setPropertyValue(int section, int property, std::string const &value)
+{
+    if (!value.empty() && section >= 0 && section < getSectionCount()) {
+        int _prop = _propertyIndex(section, property);
+        if (_prop == -1)
+            return;
+
+        // Same as above, just for the value names: second is value
+        properties[_prop].second.second = value;
+    }
+}
 
 /**** Private implementation ****/
 
