@@ -5,21 +5,56 @@ using namespace std;
 
 int main()
 {
+    // this already calls add*() so i won't use those here
     IniReader ini("test.ini");
-
-    /*IniSections const sect = ini.getSections();
-    IniProperties const prop = ini.getProperties();*/
 
     cout << "Sections count:   " << ini.getSectionCount()  << endl;
     cout << "Properties count: " << ini.getPropertyCount() << endl;
 
-    int sec = ini.findSection("goodbye to a world");
-    int pro = ini.findProperty(sec, "LA_SEINE");
+    string section = "goodbye to a world";
+    string key = "LA_SEINE";
 
-    cout << "Located in section `" << ini.getSectionName(sec)
-         << "` in key `" << ini.getPropertyKey(sec, pro) << "`\n";
+    // Sample display using overloaded constructor
+    cout << "At Section " << section
+         << " and key name " << key
+         << "\nis: " << ini(section, key) << "\n";
+    // wow!
 
-    cout << "This equals: " << ini.getPropertyValue(sec, pro) << endl;
+    int sec = ini.findSection(section);
+    int pro = ini.findProperty(sec, key);
+
+    // intentionally get references before renaming section, key, value
+    auto &secName = ini.getSectionName(sec);
+    auto &keyName = ini.getPropertyKey(sec, pro);
+    auto &valName = ini(sec, pro);
+
+    section = "Hello To A World!";
+    ini.setSectionName(sec, section);
+    ini.setPropertyKey(sec, pro, "El_Sena");
+    ini.setPropertyValue(sec, pro, "777 kilometers");
+
+    cout << "Recently changed!\n"
+         << "Located in section `" << secName
+         << "` in key `" << keyName << "`\n"
+         << "This equals: " << valName << endl;
+
+    // drop the first "Hello World" section
+    ini.dropSection(1);
+    // drop "ok" key-value
+    sec = ini.findSection(section);
+    pro = ini.findProperty(sec, "ok");
+    ini.dropProperty(sec, pro);
+
+    cout << "Dropped 'ok' from " << section << ".\n";
+
+    cout << "Sections count:   " << ini.getSectionCount()  << endl;
+    cout << "Properties count: " << ini.getPropertyCount() << endl;
+
+    // write file
+    if (ini.write("output.ini"))
+        cout << "Success! wrote file\n";
+    else
+        cout << "no write";
 
     return 0;
 }
