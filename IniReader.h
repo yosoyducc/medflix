@@ -172,6 +172,17 @@ class IniReader {
     // ====================================================================
     void addProperty(int section, std::string const &key, std::string const &value);
 
+    // === findProperty ===================================================
+    // Find the property index (key-value pair) given a section index and
+    // the name of the key.
+    //
+    // Parameters:
+    //      int section, string name
+    // Returns:
+    //      index of the property
+    // ====================================================================
+    int findProperty(int section, std::string const &name);
+
   private:
     std::string    fileName;    // origin file name
     IniSections    sections;    // ini section names

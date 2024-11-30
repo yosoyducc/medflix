@@ -211,6 +211,25 @@ void IniReader::addProperty(int section, const string &key, const string &value)
         properties.emplace_back(section, make_pair(key, value));
 }
 
+int IniReader::findProperty(int section, std::string const &name)
+{
+    // Verify that everything is sane
+    if (section >= 0 && section < getSectionCount()) {
+        int prop = 0;   // return value (index of property in section)
+        // Iterate through all the properties
+        for (int i = 0; i < getPropertyCount(); ++i) {
+            // Only choose the ones we want for comparison, skip rest
+            if (properties[i].first == section) {
+                // If passed name equals key
+                if (_strieq(name, properties[i].second.first))
+                    return prop;
+                ++prop;
+            }
+        }
+    }
+    return -1;  // Couldn't find the property :(
+}
+
 
 /**** Private implementation ****/
 
