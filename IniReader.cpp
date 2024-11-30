@@ -168,6 +168,7 @@ int IniReader::getPropertyCount() const
 string const *IniReader::getPropertyName(int section, int property)
 {
     if (section >= 0 && section < getSectionCount()) {
+        // If property was found
         int _prop = _propertyIndex(section, property);
         if (_prop != -1)
             return &properties[_prop].second.first;
