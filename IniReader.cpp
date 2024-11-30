@@ -154,6 +154,18 @@ int IniReader::addSection(string const &name)
     return -1;
 }
 
+int IniReader::findSection(string const &name)
+{
+    if (!name.empty()) {
+        for (int i = 0; i < getSectionCount(); ++i) {
+            // If the strings match, return the section
+            if (_strieq(name, sections[i]))
+                return i;
+        }
+    }
+    return -1;  // We didn't find the section :(
+}
+
 
 /**** Key-value/properties related functions ****/
 
@@ -217,4 +229,18 @@ int IniReader::_propertyIndex(int section, int property)
         }
     }
     return -1;      // It wasn't found :(
+}
+
+bool IniReader::_strieq(std::string const &lhs, std::string const &rhs)
+{
+    if (lhs.size() != rhs.size())
+        return false;
+
+    // Compare every character in the two strings, case-insensitively
+    for (size_t i = 0; i < lhs.size(); ++i) {
+        if (tolower(lhs[i]) != tolower(rhs[i]))
+            return false;
+    }
+
+    return true;
 }

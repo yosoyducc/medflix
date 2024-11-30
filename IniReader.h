@@ -110,6 +110,16 @@ class IniReader {
     // ====================================================================
     int addSection(std::string const &name);
 
+    // === findSection ====================================================
+    // Find a section with the name passed in args.
+    //
+    // Parameters:
+    //      string section name
+    // Returns:
+    //      index of this section
+    // ====================================================================
+    int findSection(std::string const &name);
+
 
     // === getPropertyCount ===============================================
     // Get the number of key/value pairs in the ini.
@@ -178,4 +188,15 @@ class IniReader {
     //      index of the property
     // ====================================================================
     int _propertyIndex(int section, int property);
+
+    // === _strieq ========================================================
+    // Case-insensitive strings comparison. Returns true if equal.
+    // Name is "STRing Insensitive EQual"
+    //
+    // Parameters:
+    //      Two strings
+    // Returns:
+    //      boolean truth
+    // ====================================================================
+    bool _strieq(std::string const &lhs, std::string const &rhs);
 };
