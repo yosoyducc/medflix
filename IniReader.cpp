@@ -147,7 +147,7 @@ int IniReader::getSectionCount() const
 string const &IniReader::getSectionName(int section)
 {
     // Only return the reference if index is valid
-    if (section < getSectionCount())
+    if (section >= 0 && section < getSectionCount())
         return sections[section];
 
     return ZEROSTR;
