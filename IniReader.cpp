@@ -219,6 +219,28 @@ void IniReader::setSectionName(int section, const std::string &name)
     }
 }
 
+void IniReader::dropSection(int section)
+{
+    if (section >= 0 && section < getSectionCount()) {
+        // Remove all of this section's properties
+        for (auto p = properties.end() - 1; p >= properties.begin(); --p) {
+            if (p->first == section)
+                properties.erase(p);
+        }
+
+        // Erase the section name
+        sections.erase(sections.begin() + section);
+
+        // Index-shift all properties that have a section index
+        // greater than the section index that was removed.
+        for (int p = 0; p < getPropertyCount(); ++p) {
+            if (properties[p].first > section)
+                --properties[p].first;
+        }
+    }
+}
+
+
 /**** Key-value/properties related functions ****/
 
 int IniReader::getPropertyCount() const
@@ -305,6 +327,19 @@ void IniReader::setPropertyValue(int section, int property, std::string const &v
         properties[_prop].second.second = value;
     }
 }
+
+void IniReader::dropProperty(int section, int property)
+{
+    if (section >= 0 && section < getSectionCount()) {
+        int _prop = _propertyIndex(section, property);
+        if (_prop == -1)
+            return;
+
+        // Erase the property from the array
+        properties.erase(properties.begin() + _prop);
+    }
+}
+
 
 /**** Private implementation ****/
 
