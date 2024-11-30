@@ -41,6 +41,9 @@ IniReader::IniReader(string const &fileName) : IniReader()
     if (!f.is_open())
         return;
 
+    // set origin file name
+    this->fileName = fileName;
+
     string buf;         // Line buffer variable
     int sect = 0;       // assume global section insertion at first
 
