@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# Poster image resources
+poster
+*.png
+*.jpg
+*.jpeg
