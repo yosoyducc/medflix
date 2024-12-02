@@ -159,6 +159,16 @@ class IniReader {
     // ====================================================================
     int getPropertyCount() const;
 
+    // === getPropertyCount(section) ======================================
+    // Get the number of key-value paies in a certain section of the ini.
+    //
+    // Parameters:
+    //      int section
+    // Returns:
+    //      number of poperties
+    // ====================================================================
+    int getPropertyCount(int section) const;
+
     // === getPropertyKey =================================================
     // Given a section and property index, return a pointer to key name.
     //

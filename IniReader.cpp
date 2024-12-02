@@ -249,6 +249,16 @@ int IniReader::getPropertyCount() const
     return properties.size();
 }
 
+int IniReader::getPropertyCount(int section) const
+{
+    int count = 0;
+    for (int i = 0; i < getPropertyCount(); ++i) {
+        if (properties[i].first == section)
+            ++count;
+    }
+    return count;
+}
+
 string const &IniReader::getPropertyKey(int section, int property)
 {
     if (section >= 0 && section < getSectionCount()) {
