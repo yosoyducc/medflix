@@ -20,13 +20,14 @@
 #include "MedFlix.h"
 #include "Config.h"
 #include "IniReader.h"      // Loading database into memory
-#include <raylib.h>
 
 // raygui is responsible for managing onscreen text boxes etc.
 extern "C" {
     #define RAYGUI_IMPLEMENTATION
     #include "raygui.h"
 }
+
+using std::string;
 
 // Use initializer list to call IniReader's constructor for `db`
 // notice that this is called before we enter this constructor.
@@ -52,15 +53,18 @@ MedFlix::MedFlix() : db("database.ini")
     exitPrompt = false;
 
     /* Cosmetics get! */
-    // Get background color for this style
+    // Load style definition and get properties for this style
+    GuiLoadStyle("style_dark.rgs");     // this leaks two blocks of memory
     background = GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR));
 }
 
 void MedFlix::update()
 {
     // Test if conditions are met to draw the exit box
-    if (WindowShouldClose() || IsKeyPressed(KEY_ESCAPE))
-        exitPrompt = true;
+    if (IsKeyPressed(KEY_ESCAPE))
+        exitPrompt = !exitPrompt;
+    if (WindowShouldClose())
+        programShouldClose = true;
 }
 
 void MedFlix::render()
@@ -69,16 +73,28 @@ void MedFlix::render()
     BeginDrawing();
         ClearBackground(background);
 
+        // Turn on word wrap and draw the text box with sample description
+        GuiSetStyle(DEFAULT, TEXT_ALIGNMENT_VERTICAL, TEXT_ALIGN_TOP);
+        GuiSetStyle(DEFAULT, TEXT_WRAP_MODE, TEXT_WRAP_WORD);
+        // yes it's temporary but still horrible
+        // we can copy this string only once and not every game loop lol
+        string dat = db("star wars", "descript");
+        dat.back() = 0x0;   // remove final quote
+        // Draw the text starting after the opening quote
+        GuiTextBox((Rectangle){ 40, 40, 300, 175 }, (char *)dat.data() + 1, 0, false);
+        GuiSetStyle(DEFAULT, TEXT_WRAP_MODE, TEXT_WRAP_NONE);
+        GuiSetStyle(DEFAULT, TEXT_ALIGNMENT_VERTICAL, TEXT_ALIGN_MIDDLE);
+
         // Draw the exit box if required
         if (exitPrompt) {
             // Establish boundaries for the box
             float hwidth  = GetScreenWidth() / 2.0f,
                   hheight = GetScreenHeight() / 2.0f;
             Rectangle bounds = { hwidth - 125, hheight - 75, 250, 150 };
-            Color fadeBg = {background.r, background.g, background.b, 0x80};
-            DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), fadeBg);
+            // Bring attention to exit box by fading out other elements above
+            DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), GuiFade(background, 0.7));
             // Draw message box and get response from user
-            int choice = GuiMessageBox(bounds, "#015#EXIT PROGRAM", "Really quit MedFlix?", "Yes :(;No");
+            int choice = GuiMessageBox(bounds, "#141#EXIT PROGRAM", "Really quit MedFlix?", "Yes :(;No");
 
             // If the user closes prompt or hits no
             if (choice == 0 || choice == 2)
@@ -98,6 +114,8 @@ bool MedFlix::done()
 
 int MedFlix::exit()
 {
+    // uncomment to avoid the two-block leak from loading the style
+    //GuiLoadStyleDefault();
     CloseWindow();
     return exitCode;
 }
