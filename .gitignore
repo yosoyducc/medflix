@@ -36,3 +36,6 @@ poster
 *.png
 *.jpg
 *.jpeg
+
+# raylib stuff
+raygui.h
