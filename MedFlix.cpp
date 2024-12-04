@@ -32,11 +32,6 @@ using std::string;
 
 // TODO: move to class
 static ScreenObjects so;
-static int loggedIn = 0;
-static Rectangle layouts[] = {
-    { 192, 16, 336, 72 },   // dummy placeholder text rectangle
-    { 0, 0, 0, 24 },        // statusbar rectangle
-};
 
 // Use initializer list to call IniReader's constructor for `db`
 // notice that this is called before we enter this constructor.
@@ -79,10 +74,6 @@ void MedFlix::update()
         exitPrompt = !exitPrompt;
     if (WindowShouldClose())
         programShouldClose = true;
-
-    // subtract padding, starting y position, and status bar
-    layouts[1].y = GetScreenHeight() - layouts[1].height;
-    layouts[1].width = GetScreenWidth();
 }
 
 void MedFlix::render()
