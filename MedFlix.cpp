@@ -62,7 +62,7 @@ MedFlix::MedFlix() : db("database.ini")
 static string const medFlix  = "MedFlix";
 static string const listText = "#185#Home;#186#Favorites;#043#Search;#151#Account;#159#Quit";
 static string const tempText = "Press the \"MedFlix\" button to \"log in\"!";
-static string const status   = "MedFlix 0.1.0  |  Copyright © 2024 Aiden Asar & Filip Vracevic. All Rights Reserved."; 
+static string const status   = "MedFlix 0.1.0  |  Copyright © 2024 Aiden Asar & Filip Vracevic. All Rights Reserved.";
 
 static int listScrollIdx = 0;
 static int listActive = 0;
