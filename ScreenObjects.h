@@ -78,6 +78,10 @@ public:
     //
     // ====================================================================
     struct {
+        // Holds reference to the parent.
+        // For accessing all objects in this class.
+        ScreenObjects &p;
+
         // === init =======================================================
         // Initialize the program sidebar.
         //
@@ -113,7 +117,7 @@ public:
             char const *list = "#185#Home;#186#Favorites;#043#Search;#151#Account;#159#Quit";
 
             // Update sidebar values
-            layout[1].height = GetScreenHeight() - layout[1].y - layout[0].y - 24;
+            layout[1].height = GetScreenHeight() - layout[1].y - layout[0].y - p.status.layout.height;
 
             // Draw the sidebar and retrieve current values
             headerPressed = GuiButton(layout[0], head);
@@ -133,7 +137,7 @@ public:
         bool headerPressed;
         // Rectangle definitions for list and header
         Rectangle layout[2];
-    } sidebar;
+    } sidebar{*this};
 
     // === Recommended panel ==============================================
     //
