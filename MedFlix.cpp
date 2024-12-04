@@ -20,6 +20,7 @@
 #include "MedFlix.h"
 #include "Config.h"
 #include "IniReader.h"      // Loading database into memory
+#include "ScreenObjects.h"
 
 // raygui is responsible for managing onscreen text boxes etc.
 extern "C" {
@@ -28,6 +29,15 @@ extern "C" {
 }
 
 using std::string;
+
+// TODO: move to class
+static ScreenObjects so;
+static char const *status = "MedFlix 0.1.0  |  Copyright © 2024 Aiden Asar & Filip Vracevic. All Rights Reserved.";
+static int loggedIn = 0;
+static Rectangle layouts[] = {
+    { 192, 16, 336, 72 },   // dummy placeholder text rectangle
+    { 0, 0, 0, 24 },        // statusbar rectangle
+};
 
 // Use initializer list to call IniReader's constructor for `db`
 // notice that this is called before we enter this constructor.
@@ -52,28 +62,14 @@ MedFlix::MedFlix() : db("database.ini")
     programShouldClose = false;
     exitPrompt = false;
 
+    // Initialize the sidebar
+    so.sidebar.init();
+
     /* Cosmetics get! */
     // Load style definition and get properties for this style
     GuiLoadStyle("style_dark.rgs");     // this leaks two blocks of memory
     background = GetColor(GuiGetStyle(DEFAULT, BACKGROUND_COLOR));
 }
-
-// Left bar variables (temp)
-static string const medFlix  = "MedFlix";
-static string const listText = "#185#Home;#186#Favorites;#043#Search;#151#Account;#159#Quit";
-static string const tempText = "Press the \"MedFlix\" button to \"log in\"!";
-static string const status   = "MedFlix 0.1.0  |  Copyright © 2024 Aiden Asar & Filip Vracevic. All Rights Reserved.";
-
-static int listScrollIdx = 0;
-static int listActive = 0;
-static int loggedIn = 0;
-
-static Rectangle layouts[] = {
-    { 8, 8, 144, 40 },      // button rectangle
-    { 8, 48, 144, 272 },    // list rectangle
-    { 192, 16, 336, 72 },   // dummy placeholder text rectangle
-    { 0, 0, 0, 24 },        // statusbar rectangle
-};
 
 void MedFlix::update()
 {
@@ -84,9 +80,8 @@ void MedFlix::update()
         programShouldClose = true;
 
     // subtract padding, starting y position, and status bar
-    layouts[1].height = GetScreenHeight() - 8 - 48 - layouts[3].height;
-    layouts[3].y = GetScreenHeight() - layouts[3].height;
-    layouts[3].width = GetScreenWidth();
+    layouts[1].y = GetScreenHeight() - layouts[1].height;
+    layouts[1].width = GetScreenWidth();
 }
 
 void MedFlix::render()
@@ -95,21 +90,13 @@ void MedFlix::render()
     BeginDrawing();
         ClearBackground(background);
 
-        // Draw left hand menu bar
-        if (GuiButton(layouts[0], medFlix.data())) {
-            // temporary fake login when pressing the MedFlix button
-            loggedIn = !loggedIn;
-            listActive = 0;
-        }
-        // offset the char array to only display account page for sign in
-        GuiListView(layouts[1], loggedIn ? listText.data() : listText.data() + 37, &listScrollIdx, &listActive);
-
-        // Draw placeholder rectangle if not "signed in"
-        if (!loggedIn)
-            GuiDummyRec(layouts[2], tempText.data());
-
         // Draw status bar at bottom of program
-        GuiStatusBar(layouts[3], status.data());
+        GuiStatusBar(layouts[1], status);
+
+        // Draw left hand menu bar
+        so.sidebar.draw();
+
+        TraceLog(LOG_INFO, "%d", so.sidebar.listScrollIdx);
 
         // Turn on word wrap and draw the text box with sample description
         /*GuiSetStyle(DEFAULT, TEXT_ALIGNMENT_VERTICAL, TEXT_ALIGN_TOP);
@@ -128,7 +115,7 @@ void MedFlix::render()
             // Establish boundaries for the box
             float hwidth  = GetScreenWidth() / 2.0f,
                   hheight = GetScreenHeight() / 2.0f;
-            Rectangle bounds = { hwidth - 125, hheight - 75, 250, 150 };
+            Rectangle bounds = { hwidth - 125, hheight - 50, 250, 100 };
             // Bring attention to exit box by fading out other elements above
             DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), GuiFade(background, 0.7));
             // Draw message box and get response from user
