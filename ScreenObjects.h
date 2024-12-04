@@ -20,6 +20,7 @@
 #pragma once
 
 // Include raygui/raylib as C library
+#include <raylib.h>
 extern "C" {
     //#include "raylib.h"
     // Make sure the implementation isn't defined twice
@@ -89,4 +90,68 @@ public:
         // Rectangle definitions for list and header
         Rectangle layout[2];
     } sidebar;
+
+    // === Recommended panel ==============================================
+    //
+    // ====================================================================
+    struct {
+        // === init =======================================================
+        // Initialize the recommended panel.
+        //
+        // Parameters:
+        //      none
+        // Returns:
+        //      void
+        // ================================================================
+        void init()
+        {
+            // Set anchor position
+            anchor = { 168, 8 };
+
+            // Panel stuff
+            panelScrollView = { 0 };
+            panelScrollOffset = { 0 };
+            panelBoundsOffset = { 0 };
+
+            // Default boundaries
+            // Backdrop
+            layout[0] = { anchor.x, anchor.y, 256, 256 };
+            // Header
+            layout[1] = { anchor.x + 16, anchor.y + 8, 224, 16 };
+            // Scroll panel
+            layout[2] = { anchor.x + 8, anchor.y + 32, 240, 216 };
+        }
+
+        void draw()
+        {
+            char const *header = "#157#Recommended";
+
+            // Update the backdrop and panel widths/heights
+            int w = GetScreenWidth() - anchor.x;
+            int h = GetScreenHeight() - anchor.y;
+
+            layout[0] = { anchor.x, anchor.y, w - 8.0f, h - 8.0f - 24.0f };
+            layout[1] = { anchor.x + 16, anchor.y + 8, w - (256 - 224.0f), layout[1].height };
+            //layout[2] = { anchor.x, anchor.y, w - (256 - 240.0f), h - (256 - 216.0f) };
+
+            // Draw the panel backdrop
+            GuiDummyRec(layout[0], nullptr);
+            GuiLine(layout[1], header);
+            GuiScrollPanel(layout[2], nullptr, layout[2], &panelScrollOffset, &panelScrollView);
+        }
+
+        // === recommend variables ========================================
+        // Internal variables used by recoomend panel.
+        // ================================================================
+        // Anchor for the recommended panel
+        Vector2 anchor;
+
+        // Movies panels variables
+        Rectangle panelScrollView;
+        Vector2 panelScrollOffset;
+        Vector2 panelBoundsOffset;
+
+        // Rectangle definitions
+        Rectangle layout[3];
+    } recommend;
 };

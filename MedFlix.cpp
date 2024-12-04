@@ -64,6 +64,7 @@ MedFlix::MedFlix() : db("database.ini")
 
     // Initialize the sidebar
     so.sidebar.init();
+    so.recommend.init();
 
     /* Cosmetics get! */
     // Load style definition and get properties for this style
@@ -95,6 +96,9 @@ void MedFlix::render()
 
         // Draw left hand menu bar
         so.sidebar.draw();
+
+        if (so.sidebar.listActive == 0)
+            so.recommend.draw();
 
         // Turn on word wrap and draw the text box with sample description
         /*GuiSetStyle(DEFAULT, TEXT_ALIGNMENT_VERTICAL, TEXT_ALIGN_TOP);
