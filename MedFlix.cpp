@@ -96,8 +96,6 @@ void MedFlix::render()
         // Draw left hand menu bar
         so.sidebar.draw();
 
-        TraceLog(LOG_INFO, "%d", so.sidebar.listScrollIdx);
-
         // Turn on word wrap and draw the text box with sample description
         /*GuiSetStyle(DEFAULT, TEXT_ALIGNMENT_VERTICAL, TEXT_ALIGN_TOP);
         GuiSetStyle(DEFAULT, TEXT_WRAP_MODE, TEXT_WRAP_WORD);
