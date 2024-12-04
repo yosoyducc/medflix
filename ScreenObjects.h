@@ -20,9 +20,8 @@
 #pragma once
 
 // Include raygui/raylib as C library
-#include <raylib.h>
 extern "C" {
-    //#include "raylib.h"
+    #include "raylib.h"
     // Make sure the implementation isn't defined twice
     #undef RAYGUI_IMPLEMENTATION
     #include "raygui.h"
@@ -30,6 +29,51 @@ extern "C" {
 
 class ScreenObjects {
 public:
+    // === Statusbar object ===============================================
+    //
+    // ====================================================================
+    struct {
+        // === init =======================================================
+        // Initialize the statusbar.
+        //
+        // Parameters:
+        //      none
+        // Returns:
+        //      void
+        // ================================================================
+        void init()
+        {
+            layout = { 0, 0, 0, 24 };
+        }
+
+        // === draw =======================================================
+        // Update statusbar internal variables and render the statusbar
+        // to the screen.
+        //
+        // Parameters:
+        //      none
+        // Returns:
+        //      void
+        // ================================================================
+        void draw()
+        {
+            char const *msg = "MedFlix 0.1.0  |  Copyright © 2024 Aiden Asar & Filip Vracevic. All Rights Reserved.";
+
+            // Update dimensions
+            layout.y = GetScreenHeight() - layout.height;
+            layout.width = GetScreenWidth();
+
+            // Draw the status bar
+            GuiStatusBar(layout, msg);
+        }
+
+        // === statusbar variables ========================================
+        // Internal variables used by statusbar. Public for convenience.
+        // Do not edit these anywhere unless you know what you are doing.
+        // ================================================================
+        Rectangle layout;
+    } status;
+
     // === Sidebar object =================================================
     //
     // ====================================================================

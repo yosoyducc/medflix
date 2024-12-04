@@ -32,7 +32,6 @@ using std::string;
 
 // TODO: move to class
 static ScreenObjects so;
-static char const *status = "MedFlix 0.1.0  |  Copyright © 2024 Aiden Asar & Filip Vracevic. All Rights Reserved.";
 static int loggedIn = 0;
 static Rectangle layouts[] = {
     { 192, 16, 336, 72 },   // dummy placeholder text rectangle
@@ -62,7 +61,8 @@ MedFlix::MedFlix() : db("database.ini")
     programShouldClose = false;
     exitPrompt = false;
 
-    // Initialize the sidebar
+    // Initialize the on-screen objects
+    so.status.init();
     so.sidebar.init();
     so.recommend.init();
 
@@ -91,8 +91,8 @@ void MedFlix::render()
     BeginDrawing();
         ClearBackground(background);
 
-        // Draw status bar at bottom of program
-        GuiStatusBar(layouts[1], status);
+        // Draw bottom-most status bar
+        so.status.draw();
 
         // Draw left hand menu bar
         so.sidebar.draw();
