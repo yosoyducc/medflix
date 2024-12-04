@@ -1,0 +1,12 @@
+#
+# rgl layout text file (v4.0) - raygui layout file generated using rGuiLayout
+#
+# Number of controls:     2
+#
+# Ref. window:    r <x> <y> <width> <height>
+# Anchor info:    a <id> <name> <posx> <posy> <enabled>
+# Control info:   c <id> <type> <name> <rectangle> <anchor_id> <text>
+#
+r 0 40 -1 -1
+c 001 5 Header 8 8 144 40 0 MedFlix
+c 002 21 List 8 48 144 152 0 #185#Home;#186#Favorites;#043#Search;#151#Account;#159#Quit
