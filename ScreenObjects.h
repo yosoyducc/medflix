@@ -143,6 +143,8 @@ public:
     //
     // ====================================================================
     struct {
+        ScreenObjects &p;
+
         // === init =======================================================
         // Initialize the recommended panel.
         //
@@ -180,7 +182,8 @@ public:
 
             layout[0] = { anchor.x, anchor.y, w - 8.0f, h - 8.0f - 24.0f };
             layout[1] = { anchor.x + 16, anchor.y + 8, w - (256 - 224.0f), layout[1].height };
-            //layout[2] = { anchor.x, anchor.y, w - (256 - 240.0f), h - (256 - 216.0f) };
+            // TODO: fix dimensions
+            layout[2] = { anchor.x + 8, anchor.y + 32, w - (256 - 240.0f) - 8, h - (256 - 216.0f) - p.status.layout.height - 8 };
 
             // Draw the panel backdrop
             GuiDummyRec(layout[0], nullptr);
@@ -201,5 +204,5 @@ public:
 
         // Rectangle definitions
         Rectangle layout[3];
-    } recommend;
+    } recommend{*this};
 };
