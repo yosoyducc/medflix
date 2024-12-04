@@ -16,9 +16,9 @@
 
 #pragma once
 
-#define SCREEN_WIDTH     1280
-#define SCREEN_MIN_WIDTH  640
-#define SCREEN_HEIGHT     800
-#define SCREEN_MIN_HEIGHT 400
+#define SCREEN_WIDTH      960
+#define SCREEN_MIN_WIDTH  800
+#define SCREEN_HEIGHT     540
+#define SCREEN_MIN_HEIGHT 450
 
 #define TARGET_FPS  60
