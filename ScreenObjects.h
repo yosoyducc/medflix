@@ -162,33 +162,47 @@ public:
             panelScrollView = { 0 };
             panelScrollOffset = { 0 };
             panelBoundsOffset = { 0 };
+            refreshPressed = false;
 
             // Default boundaries
             // Backdrop
             layout[0] = { anchor.x, anchor.y, 256, 256 };
             // Header
-            layout[1] = { anchor.x + 16, anchor.y + 8, 224, 16 };
+            layout[1] = { anchor.x + 16, anchor.y + 8, 192, 24 };
             // Scroll panel
-            layout[2] = { anchor.x + 8, anchor.y + 32, 240, 216 };
+            layout[2] = { anchor.x + 8, anchor.y + 40, 240, 208 };
+            // Button
+            layout[3] = { anchor.x + 216, anchor.y + 8, 24, 24 };
         }
 
+        // === draw =======================================================
+        // Draw the recommended panel to the screen.
+        //
+        // Parameters:
+        //      none
+        // Returns:
+        //      void
+        // ================================================================
         void draw()
         {
             char const *header = "#157#Recommended";
+            char const *button = "#211#";
 
             // Update the backdrop and panel widths/heights
             int w = GetScreenWidth() - anchor.x;
             int h = GetScreenHeight() - anchor.y;
 
-            layout[0] = { anchor.x, anchor.y, w - 8.0f, h - 8.0f - 24.0f };
-            layout[1] = { anchor.x + 16, anchor.y + 8, w - (256 - 224.0f), layout[1].height };
+            /*layout[0] = { anchor.x, anchor.y, w - 8.0f, h - 8.0f - 24.0f };
+            layout[1] = { anchor.x + 16, anchor.y + 8, w - (256 - 224.0f) - 8.0f, layout[1].height };
             // TODO: fix dimensions
             layout[2] = { anchor.x + 8, anchor.y + 32, w - (256 - 240.0f) - 8, h - (256 - 216.0f) - p.status.layout.height - 8 };
+            layout[3] = { anchor.x + layout[2].width - 40, anchor.y + 8, layout[3].width, layout[3].height };*/
 
             // Draw the panel backdrop
             GuiDummyRec(layout[0], nullptr);
             GuiLine(layout[1], header);
             GuiScrollPanel(layout[2], nullptr, layout[2], &panelScrollOffset, &panelScrollView);
+            refreshPressed = GuiButton(layout[3], button);
         }
 
         // === recommend variables ========================================
@@ -201,8 +215,9 @@ public:
         Rectangle panelScrollView;
         Vector2 panelScrollOffset;
         Vector2 panelBoundsOffset;
+        bool refreshPressed;
 
         // Rectangle definitions
-        Rectangle layout[3];
+        Rectangle layout[4];
     } recommend{*this};
 };
