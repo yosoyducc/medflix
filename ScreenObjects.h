@@ -96,7 +96,7 @@ public:
             // Estabish variables defaults
             headerPressed = false;
             listScrollIdx = 0;
-            listActive = 0;
+            listActive = ACCOUNT;
 
             // Sidebar header
             layout[0] = { 8, 8, 144, 40 };
