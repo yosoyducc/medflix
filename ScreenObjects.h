@@ -19,8 +19,9 @@
 
 #pragma once
 
+#include "AccountManager.h"     // determine if we're signed in or not
+
 // Include raygui/raylib as C library
-#include <cctype>
 extern "C" {
     #include "raylib.h"
     // Make sure the implementation isn't defined twice
@@ -111,7 +112,7 @@ public:
             // Estabish variables defaults
             headerPressed = false;
             listScrollIdx = 0;
-            listActive = ACCOUNT;
+            listActive = HOME;
 
             // Sidebar header
             layout[0] = { 8, 8, 144, 40 };
@@ -127,17 +128,26 @@ public:
         // Returns:
         //      void
         // ================================================================
-        void draw()
+        void draw(AccountManager const &acct)
         {
             char const *head = "MedFlix";
             char const *list = "#185#Home;#186#Favorites;#043#Search;#169#Movie Info;#151#Account;#159#Quit";
+
+            // Calculate offsets for when signed in and out
+            int listOffTxt = 0;
+            listActiveOff = HOME;
+            if (!acct.signedIn()) {
+                // Set sign-out offsets
+                listOffTxt = 53;
+                listActiveOff = ACCOUNT;
+            }
 
             // Update sidebar values
             layout[1].height = GetScreenHeight() - layout[1].y - layout[0].y - p.status.layout.height;
 
             // Draw the sidebar and retrieve current values
             headerPressed = GuiButton(layout[0], head);
-            GuiListView(layout[1], list, &listScrollIdx, &listActive);
+            GuiListView(layout[1], list + listOffTxt, &listScrollIdx, &listActive);
         }
 
         // === sidebar variables ==========================================
@@ -149,6 +159,8 @@ public:
         int listScrollIdx;
         // Identifies the currently selected element in the list.
         int listActive;
+        // Determines the current offset for the list. (used for logged out)
+        int listActiveOff;
         // Tells whether the header is pressed or not. (unused)
         bool headerPressed;
         // Rectangle definitions for list and header

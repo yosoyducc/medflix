@@ -24,6 +24,7 @@
 
 // raygui is responsible for managing onscreen text boxes etc.
 extern "C" {
+    #include "raylib.h"
     #define RAYGUI_IMPLEMENTATION
     #include "raygui.h"
 }
@@ -82,7 +83,8 @@ void MedFlix::update()
     if (so.account.butSigninPressed) switch (so.account.dropActionActive) {
     case 0:     // SIGN IN mode
         if (acct.signIn(so.account.entryUserText, so.account.entryPassText)) {
-            TraceLog(LOG_INFO, "Signing in");
+            TraceLog(LOG_INFO, "Signed in as %s",
+                acct.getUserData()->getPropertyValue(0, 0).data());
             // "clear" the user/pass entry buffers
             so.account.entryUserText[0] = 0x0;
             so.account.entryPassText[0] = 0x0;
@@ -98,7 +100,10 @@ void MedFlix::update()
             // TODO: set label message to account registration success
         } else {
             // TODO: TEMPORARY: sign out user if failed account creation (only way to sign out right now)
-            acct.signOut();
+            if (acct.signOut())
+                TraceLog(LOG_INFO, "Successfully signed out.");
+            // set to Account page (remember the offsets)
+            so.sidebar.listActive = ScreenObjects::HOME;
             so.account.loginFailTimeout = 3.0f;
         }
         break;
@@ -121,16 +126,19 @@ void MedFlix::render()
         // Draw bottom-most status bar
         so.status.draw();
 
-        // Draw left hand menu bar, checking whether the user wants to quit
-        int lastListActive = so.sidebar.listActive;
-        so.sidebar.draw();
-        if (so.sidebar.listActive == ScreenObjects::QUIT) {
+        // Draw left hand menu bar with signout offset,
+        // checking whether the user wants to quit first
+        int listActiveLast = so.sidebar.listActive;
+        so.sidebar.draw(acct);
+        int listActiveTrue = so.sidebar.listActive + so.sidebar.listActiveOff;
+
+        if (listActiveTrue == ScreenObjects::QUIT) {
             exitPrompt = true;
-            so.sidebar.listActive = lastListActive;
+            so.sidebar.listActive = listActiveLast;
         }
 
         // Render the main surface based on what tab is selected
-        switch (so.sidebar.listActive) {
+        switch (listActiveTrue) {
         case ScreenObjects::HOME:
             so.recommend.draw();
             break;
