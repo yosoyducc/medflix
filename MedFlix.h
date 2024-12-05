@@ -17,6 +17,7 @@
 #pragma once
 
 // Local includes
+#include "AccountManager.h"
 #include "Config.h"
 #include "IniReader.h"
 
@@ -81,6 +82,7 @@ public:
 
 private:
     IniReader db;               // Movies database
+    AccountManager acct;        // Currently signed in user account
 
     // THE STATE OF AFFAIRS (program variables)
     int exitCode;               // Program exit code

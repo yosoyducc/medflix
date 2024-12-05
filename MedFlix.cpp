@@ -80,9 +80,35 @@ void MedFlix::update()
     if (WindowShouldClose())
         programShouldClose = true;
 
-    // TODO: remove, temporary fail timeout of two seconds when press button
-    if (so.account.butSigninPressed)
-        so.account.loginFailTimeout = 2.0f;
+    // If sign in button is pressed, determine which mode is
+    // selected then take an appropriate action
+    if (so.account.butSigninPressed) switch (so.account.dropActionActive) {
+    case 0:     // SIGN IN mode
+        if (acct.signIn(so.account.entryUserText, so.account.entryPassText)) {
+            TraceLog(LOG_INFO, "Signing in");
+            // "clear" the user/pass entry buffers
+            so.account.entryUserText[0] = 0x0;
+            so.account.entryPassText[0] = 0x0;
+            // switch screen to Home
+            so.sidebar.listActive = so.sidebar.HOME;
+        } else {
+            // TODO: set label message to account sign in fail
+            so.account.loginFailTimeout = 3.5f;
+        }
+        break;
+    case 1:     // REGISTER mode
+        if (AccountManager::create(so.account.entryUserText, so.account.entryPassText)) {
+            // TODO: set label message to account registration success
+        } else {
+            // TODO: TEMPORARY: sign out user if failed account creation (only way to sign out right now)
+            acct.signOut();
+            so.account.loginFailTimeout = 3.0f;
+        }
+        break;
+    }
+    // In either case, we want to reset the button press state
+    // otherwise the program will infinitely attempt to sign us in
+    so.account.butSigninPressed = false;
 
     // If exit prompt is active, disable onscreen elements
     if (exitPrompt)
@@ -108,13 +134,14 @@ void MedFlix::render()
 
         // Render the main surface based on what tab is selected
         switch (so.sidebar.listActive) {
-            case so.sidebar.HOME:
-                so.recommend.draw();
-                break;
-            case so.sidebar.ACCOUNT:
-                so.account.draw();
-                break;
-            default: break;
+        case so.sidebar.HOME:
+            so.recommend.draw();
+            break;
+        case so.sidebar.ACCOUNT:
+            so.account.draw();
+            break;
+        default:
+            break;
         }
 
         // Turn on word wrap and draw the text box with sample description
@@ -161,6 +188,9 @@ bool MedFlix::done()
 
 int MedFlix::exit()
 {
+    // Sign out of account, if signed in
+    acct.signOut();
+
     // uncomment to avoid the two-block leak from loading the style
     //GuiLoadStyleDefault();
     CloseWindow();
