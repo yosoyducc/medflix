@@ -20,6 +20,7 @@
 #pragma once
 
 // Include raygui/raylib as C library
+#include <cctype>
 extern "C" {
     #include "raylib.h"
     // Make sure the implementation isn't defined twice
@@ -356,6 +357,11 @@ public:
             butSigninPressed = GuiButton(layout[8], signMeIn);
             if (GuiDropdownBox(layout[1], dropdown, &dropActionActive, dropActionEditMode))
                 dropActionEditMode = !dropActionEditMode;
+
+            // Get around some annoying bug where focus is kept on
+            // entry box even after hitting enter
+            if (IsKeyPressed(KEY_ENTER))
+                entryUserEditMode = entryPassEditMode = false;
 
             GuiUnlock();
         }
