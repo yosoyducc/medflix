@@ -115,7 +115,7 @@ public:
         void draw()
         {
             char const *head = "MedFlix";
-            char const *list = "#185#Home;#186#My Lists;#043#Search;#169#Movie Info;#151#Account;#159#Quit";
+            char const *list = "#185#Home;#186#Favorites;#043#Search;#169#Movie Info;#151#Account;#159#Quit";
 
             // Update sidebar values
             layout[1].height = GetScreenHeight() - layout[1].y - layout[0].y - p.status.layout.height;
