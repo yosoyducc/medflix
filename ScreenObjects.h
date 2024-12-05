@@ -30,6 +30,21 @@ extern "C" {
 
 class ScreenObjects {
 public:
+    // Let me preface by saying this: Clang is a symptom.
+    // Originally this enum was under the sidebar struct, while referencing
+    // these values as so.sidebar.MEMBER in the switch in ::render(). Clang
+    // was whining about it and said "Case value is not a constant expression".
+    // OK you win Clang, you want to be *extra* sure that enum members are
+    // indeed compile-time constants. Here you go, you drama queen.
+    enum SidebarOptions {
+        HOME = 0,
+        MY_LISTS,
+        SEARCH,
+        MOVIE_INFO,
+        ACCOUNT,
+        QUIT
+    };
+
     // === Statusbar object ===============================================
     //
     // ====================================================================
@@ -140,14 +155,6 @@ public:
         Rectangle layout[2];
 
         // For clarification of the index
-        enum SidebarOptions {
-            HOME = 0,
-            MY_LISTS,
-            SEARCH,
-            MOVIE_INFO,
-            ACCOUNT,
-            QUIT
-        };
     } sidebar{*this};
 
     // === Recommended panel ==============================================

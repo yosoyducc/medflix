@@ -30,9 +30,6 @@ extern "C" {
 
 using std::string;
 
-// TODO: move to class
-static ScreenObjects so;
-
 // Use initializer list to call IniReader's constructor for `db`
 // notice that this is called before we enter this constructor.
 MedFlix::MedFlix() : db("database.ini")
@@ -90,7 +87,7 @@ void MedFlix::update()
             so.account.entryUserText[0] = 0x0;
             so.account.entryPassText[0] = 0x0;
             // switch screen to Home
-            so.sidebar.listActive = so.sidebar.HOME;
+            so.sidebar.listActive = ScreenObjects::HOME;
         } else {
             // TODO: set label message to account sign in fail
             so.account.loginFailTimeout = 3.5f;
@@ -127,17 +124,17 @@ void MedFlix::render()
         // Draw left hand menu bar, checking whether the user wants to quit
         int lastListActive = so.sidebar.listActive;
         so.sidebar.draw();
-        if (so.sidebar.listActive == so.sidebar.QUIT) {
+        if (so.sidebar.listActive == ScreenObjects::QUIT) {
             exitPrompt = true;
             so.sidebar.listActive = lastListActive;
         }
 
         // Render the main surface based on what tab is selected
         switch (so.sidebar.listActive) {
-        case so.sidebar.HOME:
+        case ScreenObjects::HOME:
             so.recommend.draw();
             break;
-        case so.sidebar.ACCOUNT:
+        case ScreenObjects::ACCOUNT:
             so.account.draw();
             break;
         default:

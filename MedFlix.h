@@ -20,6 +20,7 @@
 #include "AccountManager.h"
 #include "Config.h"
 #include "IniReader.h"
+#include "ScreenObjects.h"
 
 // raylib include (raygui included in MedFlix.cpp)
 // We need the extern "C" here because raylib is a C library
@@ -83,6 +84,7 @@ public:
 private:
     IniReader db;               // Movies database
     AccountManager acct;        // Currently signed in user account
+    ScreenObjects so;           // Screen objects (only init objs once per run)
 
     // THE STATE OF AFFAIRS (program variables)
     int exitCode;               // Program exit code
