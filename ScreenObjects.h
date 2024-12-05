@@ -156,7 +156,7 @@ public:
         void init()
         {
             // Set anchor position
-            anchor = { 168, 8 };
+            anchor = { 160, 8 };
 
             // Panel stuff
             panelScrollView = { 0 };
@@ -192,11 +192,16 @@ public:
             int w = GetScreenWidth() - anchor.x;
             int h = GetScreenHeight() - anchor.y;
 
-            /*layout[0] = { anchor.x, anchor.y, w - 8.0f, h - 8.0f - 24.0f };
-            layout[1] = { anchor.x + 16, anchor.y + 8, w - (256 - 224.0f) - 8.0f, layout[1].height };
-            // TODO: fix dimensions
-            layout[2] = { anchor.x + 8, anchor.y + 32, w - (256 - 240.0f) - 8, h - (256 - 216.0f) - p.status.layout.height - 8 };
-            layout[3] = { anchor.x + layout[2].width - 40, anchor.y + 8, layout[3].width, layout[3].height };*/
+            // Update back panel width/height
+            layout[0].width  = w - 8;
+            layout[0].height = h - p.status.layout.height - 8;
+            // Update header width: subtract button width and combined padding
+            layout[1].width  = w - layout[3].width - 48;
+            // Update scroll panel dimensions, padding pre-calculated
+            layout[2].width  = w - 24;
+            layout[2].height = h - layout[1].height - p.status.layout.height - 32;
+            // Update button position on the x-axis
+            layout[3].x      = anchor.x + layout[1].width + 24;
 
             // Draw the panel backdrop
             GuiDummyRec(layout[0], nullptr);
