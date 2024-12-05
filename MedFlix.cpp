@@ -74,6 +74,10 @@ void MedFlix::update()
         exitPrompt = !exitPrompt;
     if (WindowShouldClose())
         programShouldClose = true;
+
+    // If exit prompt is active, disable onscreen elements
+    if (exitPrompt)
+        GuiLock();
 }
 
 void MedFlix::render()
@@ -105,6 +109,7 @@ void MedFlix::render()
 
         // Draw the exit box if required
         if (exitPrompt) {
+            GuiUnlock();
             // Establish boundaries for the box
             float hwidth  = GetScreenWidth() / 2.0f,
                   hheight = GetScreenHeight() / 2.0f;
@@ -121,6 +126,8 @@ void MedFlix::render()
             else if (choice == 1)
                 programShouldClose = true;
             // If user doesn't choose anything
+
+            // Gui gets locked again by the check in ::update()
         }
     EndDrawing();
 }
