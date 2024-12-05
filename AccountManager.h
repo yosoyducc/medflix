@@ -14,6 +14,8 @@
 // ========================================================================
 
 
+#pragma once
+
 #include "IniReader.h"
 
 // NOTE: this directory MUST exist. Program will always fail
