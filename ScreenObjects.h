@@ -221,7 +221,7 @@ public:
         }
 
         // === recommend variables ========================================
-        // Internal variables used by recoomend panel.
+        // Internal variables used by recommend panel.
         // ================================================================
         // Anchor for the recommended panel
         Vector2 anchor;
@@ -235,4 +235,101 @@ public:
         // Rectangle definitions
         Rectangle layout[4];
     } recommend{*this};
+
+    // === Account panel ==================================================
+    //
+    // ====================================================================
+    struct {
+        // === init =======================================================
+        // Initialize the accouts registration/login/logout screen.
+        //
+        // Parameters:
+        //      none
+        // Returns:
+        //      void
+        // ================================================================
+        void init()
+        {
+            anchor = { 160, 8 };
+
+            dropActionEditMode = false;
+            dropActionActive = 0;           // sign in is the default mode
+
+            entryUserEditMode = false;
+            entryUserText[0] = 0x0;
+
+            entryPassEditMode = false;
+            entryPassText[0] = 0x0;
+
+            butSigninPressed = false;
+
+            // Account management window dimensions
+            layout[0] = { anchor.x, anchor.y, 312, 216 };
+            // Sign-in/registration dropdown
+            layout[1] = { anchor.x + 216, anchor.y, 96, 24 };
+            // Sign in label text
+            layout[2] = { anchor.x + 24, anchor.y + 32, 120, 24 };
+            // "Account info" group
+            layout[3] = { anchor.x + 8, anchor.y + 72, 296, 88 };
+            // "Username:" label
+            layout[4] = { anchor.x + 24, anchor.y + 88, 80, 24 };
+            // username entry box
+            layout[5] = { anchor.x + 112, anchor.y + 88, 176, 24 };
+            // "Password:" label
+            layout[6] = { anchor.x + 24, anchor.y + 120, 80, 24 };
+            // password entry
+            layout[7] = { anchor.x + 112, anchor.y + 120, 176, 24 };
+            // sign me in button!
+            layout[8] = { anchor.x + 96, anchor.y + 176, 120, 24 };
+        }
+
+        // === draw =======================================================
+        // Render the account panel to the screen, based on login status.
+        //
+        // Parameters:
+        //      Account type
+        // Returns:
+        //      void
+        // ================================================================
+        void draw(/*Account acct*/)
+        {
+            if (dropActionEditMode) GuiLock();
+
+            char const *panelTitle  = "#137#Account Manager";
+            char const *labelSignin = "Please sign in.";
+
+            GuiPanel(layout[0], panelTitle);
+            GuiLabel(layout[2], labelSignin);
+            GuiGroupBox(layout[3], "Account info");
+            GuiLabel(layout[4], "Username:");
+            if (GuiTextBox(layout[5], entryUserText, 16, entryUserEditMode))
+                entryUserEditMode = !entryUserEditMode;
+            GuiLabel( layout[6], "Password:");
+            if (GuiTextBox(layout[7], entryPassText, 32, entryPassEditMode))
+                entryPassEditMode = !entryPassEditMode;
+            butSigninPressed = GuiButton(layout[8], "Sign me in!");
+            if (GuiDropdownBox(layout[1], "SIGN IN;REGISTER", &dropActionActive, dropActionEditMode))
+                dropActionEditMode = !dropActionEditMode;
+
+            GuiUnlock();
+        }
+
+        // === account panel variables ====================================
+        // Internal variables used by account panel.
+        // ================================================================
+        Vector2 anchor;
+
+        bool dropActionEditMode;
+        int dropActionActive;
+
+        bool entryUserEditMode;
+        char entryUserText[16];
+
+        bool entryPassEditMode;
+        char entryPassText[32];
+
+        bool butSigninPressed;
+
+        Rectangle layout[9];
+    } account;
 };

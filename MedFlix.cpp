@@ -60,6 +60,7 @@ MedFlix::MedFlix() : db("database.ini")
     so.status.init();
     so.sidebar.init();
     so.recommend.init();
+    so.account.init();
 
     /* Cosmetics get! */
     // Load style definition and get properties for this style
@@ -70,8 +71,12 @@ MedFlix::MedFlix() : db("database.ini")
 void MedFlix::update()
 {
     // Test if conditions are met to draw the exit box
-    if (IsKeyPressed(KEY_ESCAPE))
+    if (IsKeyPressed(KEY_ESCAPE)) {
         exitPrompt = !exitPrompt;
+
+        // get around a bug allowing press after esc on dropdown
+        so.account.dropActionEditMode = false;
+    }
     if (WindowShouldClose())
         programShouldClose = true;
 
@@ -92,8 +97,16 @@ void MedFlix::render()
         // Draw left hand menu bar
         so.sidebar.draw();
 
-        if (so.sidebar.listActive == so.sidebar.HOME)
-            so.recommend.draw();
+        // Render the main surface based on what tab is selected
+        switch (so.sidebar.listActive) {
+            case so.sidebar.HOME:
+                so.recommend.draw();
+                break;
+            case so.sidebar.ACCOUNT:
+                so.account.draw();
+                break;
+            default: break;
+        }
 
         // Turn on word wrap and draw the text box with sample description
         /*GuiSetStyle(DEFAULT, TEXT_ALIGNMENT_VERTICAL, TEXT_ALIGN_TOP);
