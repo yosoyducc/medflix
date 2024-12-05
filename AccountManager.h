@@ -61,7 +61,7 @@ public:
     // Returns:
     //      boolean truth
     // ====================================================================
-    bool signedIn();
+    bool signedIn() const;
 
     // === signOut ========================================================
     // Attempts to sign out the user. Tries first to save user profile to

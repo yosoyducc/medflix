@@ -116,7 +116,7 @@ bool AccountManager::signIn(char const *u, char const *p)
     return hashMatch;
 }
 
-bool AccountManager::signedIn()
+bool AccountManager::signedIn() const
 {
     // User is signed in if this isn't nullptr
     return user != nullptr;
