@@ -171,7 +171,7 @@ int IniReader::getSectionCount() const
     return sections.size();
 }
 
-string const &IniReader::getSectionName(int section)
+string const &IniReader::getSectionName(int section) const
 {
     // Only return the reference if index is valid
     if (section >= 0 && section < getSectionCount())
@@ -180,7 +180,7 @@ string const &IniReader::getSectionName(int section)
     return ZEROSTR;
 }
 
-IniSections const &IniReader::getSections()
+IniSections const &IniReader::getSections() const
 {
     // Get reference to internal sections
     return sections;
@@ -199,7 +199,7 @@ int IniReader::addSection(string const &name)
     return -1;
 }
 
-int IniReader::findSection(string const &name)
+int IniReader::findSection(string const &name) const
 {
     if (!name.empty()) {
         for (int i = 0; i < getSectionCount(); ++i) {
@@ -259,7 +259,7 @@ int IniReader::getPropertyCount(int section) const
     return count;
 }
 
-string const &IniReader::getPropertyKey(int section, int property)
+string const &IniReader::getPropertyKey(int section, int property) const
 {
     if (section >= 0 && section < getSectionCount()) {
         // If property was found
@@ -270,7 +270,7 @@ string const &IniReader::getPropertyKey(int section, int property)
     return ZEROSTR;     // Return nothing if invalid :(
 }
 
-string const &IniReader::getPropertyValue(int section, int property)
+string const &IniReader::getPropertyValue(int section, int property) const
 {
     // Same code as above but different return
     if (section >= 0 && section < getSectionCount()) {
@@ -281,7 +281,7 @@ string const &IniReader::getPropertyValue(int section, int property)
     return ZEROSTR;
 }
 
-IniProperties const &IniReader::getProperties()
+IniProperties const &IniReader::getProperties() const
 {
     // Get reference to internal properties
     return properties;
@@ -295,7 +295,7 @@ void IniReader::addProperty(int section, const string &key, const string &value)
         properties.emplace_back(section, make_pair(key, value));
 }
 
-int IniReader::findProperty(int section, std::string const &name)
+int IniReader::findProperty(int section, std::string const &name)const
 {
     // Verify that everything is sane
     if (!name.empty() && section >= 0 && section < getSectionCount()) {
@@ -353,12 +353,12 @@ void IniReader::dropProperty(int section, int property)
 
 /**** Overloaded operators ****/
 
-std::string const &IniReader::operator()(int section, int property)
+std::string const &IniReader::operator()(int section, int property) const
 {
     return getPropertyValue(section, property);
 }
 
-std::string const &IniReader::operator()(std::string const &section, std::string const &key)
+std::string const &IniReader::operator()(std::string const &section, std::string const &key) const
 {
     int s = findSection(section);
     int p = findProperty(s, key);
@@ -370,7 +370,7 @@ std::string const &IniReader::operator()(std::string const &section, std::string
 
 std::string const IniReader::ZEROSTR = "";
 
-int IniReader::_propertyIndex(int section, int property)
+int IniReader::_propertyIndex(int section, int property) const
 {
     // Check to see if section specified is valid
     if (section >= 0 && section < getSectionCount()) {
@@ -387,7 +387,7 @@ int IniReader::_propertyIndex(int section, int property)
     return -1;      // It wasn't found :(
 }
 
-bool IniReader::_strieq(std::string const &lhs, std::string const &rhs)
+bool IniReader::_strieq(std::string const &lhs, std::string const &rhs) const
 {
     if (lhs.size() != rhs.size())
         return false;

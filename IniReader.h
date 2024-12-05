@@ -92,7 +92,7 @@ class IniReader {
     // Returns:
     //      number of sections
     // ====================================================================
-    std::string const &getSectionName(int section);
+    std::string const &getSectionName(int section) const;
 
     // === getSections ====================================================
     // Get all section data. Returns a reference to the internal
@@ -103,7 +103,7 @@ class IniReader {
     // Returns:
     //      IniSections reference
     // ====================================================================
-    IniSections const &getSections();
+    IniSections const &getSections() const;
 
     // === addSection =====================================================
     // Adds a section.
@@ -123,7 +123,7 @@ class IniReader {
     // Returns:
     //      index of this section
     // ====================================================================
-    int findSection(std::string const &name);
+    int findSection(std::string const &name) const;
 
     // === setSectionName =================================================
     // Set/rename a section.
@@ -177,7 +177,7 @@ class IniReader {
     // Returns:
     //      reference to string containing key name
     // ====================================================================
-    std::string const &getPropertyKey(int section, int property);
+    std::string const &getPropertyKey(int section, int property) const;
 
     // === getPropertyValue ===============================================
     // Given a section and property index, return a pointer to value name.
@@ -187,7 +187,7 @@ class IniReader {
     // Returns:
     //      reference to string containing value name
     // ====================================================================
-    std::string const &getPropertyValue(int section, int property);
+    std::string const &getPropertyValue(int section, int property) const;
 
     // === getProperties ==================================================
     // Get all property data. Returns a reference to the internal
@@ -198,7 +198,7 @@ class IniReader {
     // Returns:
     //      IniProperties reference
     // ====================================================================
-    IniProperties const &getProperties();
+    IniProperties const &getProperties() const;
 
     // === addProperty ====================================================
     // Adds a property into a section. Specify 0 for the global area
@@ -219,7 +219,7 @@ class IniReader {
     // Returns:
     //      index of the property
     // ====================================================================
-    int findProperty(int section, std::string const &name);
+    int findProperty(int section, std::string const &name) const;
 
     // === setPropertyKey =================================================
     // Set/rename a property key.
@@ -257,13 +257,13 @@ class IniReader {
     // === operator(int, int) =============================================
     // Returns the value from property located at section.
     // ====================================================================
-    std::string const &operator()(int section, int property);
+    std::string const &operator()(int section, int property) const;
 
     // === operator(string, string) =======================================
     // Returns the value from property located at a section name
     // and a property key name.
     // ====================================================================
-    std::string const &operator()(std::string const &section, std::string const &key);
+    std::string const &operator()(std::string const &section, std::string const &key) const;
 
 
   private:
@@ -284,7 +284,7 @@ class IniReader {
     // Returns:
     //      index of the property
     // ====================================================================
-    int _propertyIndex(int section, int property);
+    int _propertyIndex(int section, int property) const;
 
     // === _strieq ========================================================
     // Case-insensitive strings comparison. Returns true if equal.
@@ -295,5 +295,5 @@ class IniReader {
     // Returns:
     //      boolean truth
     // ====================================================================
-    bool _strieq(std::string const &lhs, std::string const &rhs);
+    bool _strieq(std::string const &lhs, std::string const &rhs) const;
 };
