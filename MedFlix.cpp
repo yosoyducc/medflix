@@ -98,8 +98,13 @@ void MedFlix::render()
         // Draw bottom-most status bar
         so.status.draw();
 
-        // Draw left hand menu bar
+        // Draw left hand menu bar, checking whether the user wants to quit
+        int lastListActive = so.sidebar.listActive;
         so.sidebar.draw();
+        if (so.sidebar.listActive == so.sidebar.QUIT) {
+            exitPrompt = true;
+            so.sidebar.listActive = lastListActive;
+        }
 
         // Render the main surface based on what tab is selected
         switch (so.sidebar.listActive) {
