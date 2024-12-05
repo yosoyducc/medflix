@@ -240,6 +240,8 @@ public:
     //
     // ====================================================================
     struct {
+        ScreenObjects &p;
+
         // === init =======================================================
         // Initialize the accouts registration/login/logout screen.
         //
@@ -263,12 +265,14 @@ public:
 
             butSigninPressed = false;
 
+            loginFailTimeout = 0.0f;
+
             // Account management window dimensions
             layout[0] = { anchor.x, anchor.y, 312, 216 };
             // Sign-in/registration dropdown
             layout[1] = { anchor.x + 216, anchor.y, 96, 24 };
             // Sign in label text
-            layout[2] = { anchor.x + 24, anchor.y + 32, 120, 24 };
+            layout[2] = { anchor.x + 24, anchor.y + 32, 264, 24 };
             // "Account info" group
             layout[3] = { anchor.x + 8, anchor.y + 72, 296, 88 };
             // "Username:" label
@@ -296,19 +300,61 @@ public:
             if (dropActionEditMode) GuiLock();
 
             char const *panelTitle  = "#137#Account Manager";
-            char const *labelSignin = "Please sign in.";
+            char const *labelSignin = dropActionActive ? "New account creation" : "Please sign in.";
+            char const *acctInfo    = dropActionActive ? "Account registration" : "Account info";
+            char const *username    = "Username:";
+            char const *password    = "Password:";
+            char const *signMeIn    = dropActionActive ? "Register me!" : "Sign me in!";
+            char const *dropdown    = "SIGN IN;REGISTER";
 
+            // Check if the login was failed
+            if (loginFailTimeout > 0) {
+                labelSignin = "ERROR: Auth failed! Wrong user/pass?";
+                loginFailTimeout -= GetFrameTime();
+            }
+
+            // Update anchor position and all attached elements
+            // We need to add sidebar width and statusbar halved to offset to viewport's center
+            anchor.x =
+                GetScreenWidth() / 2.0f
+                - layout[0].width / 2.0f
+                + p.sidebar.layout[0].width / 2.0f;
+            anchor.y =
+                GetScreenHeight() / 2.0f
+                - layout[0].height / 2.0f
+                - p.status.layout.height / 2.0f;
+
+            layout[0].x = anchor.x;
+            layout[0].y = anchor.y;
+            layout[1].x = anchor.x + 216;
+            layout[1].y = anchor.y;
+            layout[2].x = anchor.x + 24;
+            layout[2].y = anchor.y + 32;
+            layout[3].x = anchor.x + 8;
+            layout[3].y = anchor.y + 72;
+            layout[4].x = anchor.x + 24;
+            layout[4].y = anchor.y + 88;
+            layout[5].x = anchor.x + 112;
+            layout[5].y = anchor.y + 88;
+            layout[6].x = anchor.x + 24;
+            layout[6].y = anchor.y + 120;
+            layout[7].x = anchor.x + 112;
+            layout[7].y = anchor.y + 120;
+            layout[8].x = anchor.x + 96;
+            layout[8].y = anchor.y + 176;
+
+            // Render the gui to the screen.
             GuiPanel(layout[0], panelTitle);
             GuiLabel(layout[2], labelSignin);
-            GuiGroupBox(layout[3], "Account info");
-            GuiLabel(layout[4], "Username:");
+            GuiGroupBox(layout[3], acctInfo);
+            GuiLabel(layout[4], username);
             if (GuiTextBox(layout[5], entryUserText, 16, entryUserEditMode))
                 entryUserEditMode = !entryUserEditMode;
-            GuiLabel( layout[6], "Password:");
+            GuiLabel( layout[6], password);
             if (GuiTextBox(layout[7], entryPassText, 32, entryPassEditMode))
                 entryPassEditMode = !entryPassEditMode;
-            butSigninPressed = GuiButton(layout[8], "Sign me in!");
-            if (GuiDropdownBox(layout[1], "SIGN IN;REGISTER", &dropActionActive, dropActionEditMode))
+            butSigninPressed = GuiButton(layout[8], signMeIn);
+            if (GuiDropdownBox(layout[1], dropdown, &dropActionActive, dropActionEditMode))
                 dropActionEditMode = !dropActionEditMode;
 
             GuiUnlock();
@@ -330,6 +376,8 @@ public:
 
         bool butSigninPressed;
 
+        float loginFailTimeout;
+
         Rectangle layout[9];
-    } account;
+    } account{*this};
 };

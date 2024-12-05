@@ -80,6 +80,10 @@ void MedFlix::update()
     if (WindowShouldClose())
         programShouldClose = true;
 
+    // TODO: remove, temporary fail timeout of two seconds when press button
+    if (so.account.butSigninPressed)
+        so.account.loginFailTimeout = 2.0f;
+
     // If exit prompt is active, disable onscreen elements
     if (exitPrompt)
         GuiLock();
