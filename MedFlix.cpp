@@ -92,7 +92,7 @@ void MedFlix::render()
         // Draw left hand menu bar
         so.sidebar.draw();
 
-        if (so.sidebar.listActive == 0)
+        if (so.sidebar.listActive == so.sidebar.HOME)
             so.recommend.draw();
 
         // Turn on word wrap and draw the text box with sample description
