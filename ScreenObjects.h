@@ -21,6 +21,8 @@
 
 #include "AccountManager.h"     // determine if we're signed in or not
 #include "IniReader.h"
+#include "HashTable.h"
+#include <cstddef>
 
 // Include raygui/raylib as C library
 extern "C" {
@@ -265,11 +267,11 @@ public:
         // Initialize the movie viewing panel.
         //
         // Parameters:
-        //      Node pointer to a hashNode
+        //      Nothing
         // Returns:
         //      void
         // ================================================================
-        void init(/* Node *hashNode */)
+        void init()
         {
             // Anchors
             lAnchor = { 160, 8 };
@@ -330,6 +332,27 @@ public:
             genre       = "Awesome";
             imdb        = "10.2";
             descript    = "Some really cool stuff happens.";
+        }
+
+        // === load =======================================================
+        // For a Movie Hash node, update internal references to them.
+        //
+        // Parameters:
+        //      MovieNode *
+        // Returns:
+        //      void
+        // ================================================================
+        void load(MovieNode const *movie)
+        {
+            // TODO: memory error here
+            //name = movie->name.data();
+            //year = movie->year.data();
+            //rating = movie->rating.data();
+            //runtime = movie->runtime.data();
+            int textCount;
+            char const **text = TextSplit(movie->director.data(), ',', &textCount);
+            for (int i = 0; i < 4; ++i)
+                director[i] = text[i];
         }
 
         // === draw =======================================================
@@ -467,6 +490,9 @@ public:
         // Variable text fields (TODO: move to own function)
         char const *name;
         char const *info;
+        char const *year;
+        char const *rating;
+        char const *runtime;
         char const *director[4];
         char const *genre;
         char const *imdb;
