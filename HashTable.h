@@ -24,7 +24,7 @@
 typedef std::vector<std::pair<std::pair<std::string, float>, std::vector<int>>> prof_data;
 //what the teacher's name will be linked to
 
-struct Node {
+struct MovieNode {
     std::string const &name;      // movie name (used as key)
     std::string const &year;
     std::string const &rating;
@@ -34,11 +34,11 @@ struct Node {
     std::string const &descript;
     std::string const &imdb;
     std::string const &poster;
-    Node* next;
+    MovieNode* next;
 
-    Node(std::string const &, std::string const &, std::string const &,
-         std::string const &, std::string const &, std::string const &,
-         std::string const &, std::string const &, std::string const &);
+    MovieNode(std::string const &, std::string const &, std::string const &,
+              std::string const &, std::string const &, std::string const &,
+              std::string const &, std::string const &, std::string const &);
 };
 
 // Not declared or implemented yet.

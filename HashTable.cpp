@@ -23,7 +23,7 @@ using std::string;
 
 /**** Node Class ****/
 
-Node::Node(string const &n, string const &y, string const &ra, string const &ru, string const &g, string const &dr, string const &de, string const &i, string const &p)
+MovieNode::MovieNode(string const &n, string const &y, string const &ra, string const &ru, string const &g, string const &dr, string const &de, string const &i, string const &p)
 : name{n}, year{y}, rating{ra}, runtime{ru}, genre{g}, director{dr}, descript{de}, imdb{i}, poster{p}, next{nullptr}
 { }
 
