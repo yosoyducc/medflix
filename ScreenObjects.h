@@ -20,6 +20,7 @@
 #pragma once
 
 #include "AccountManager.h"     // determine if we're signed in or not
+#include "IniReader.h"
 
 // Include raygui/raylib as C library
 extern "C" {
@@ -275,11 +276,13 @@ public:
             rAnchor = { 580, 0 };
 
             // Controls
-            toggleSuperActive   = false;
-            toggleLikeActive    = false;
-            toggleLoatheActive  = false;
+            for (int i = 0; i < 3; ++i)
+                current[i]      = false;
             toggleFaveActive    = false;
             toggleWatchedActive = false;
+
+            for (int i = 0; i < 5; ++i)
+                previous[i]     = false;
 
             // Poster, name, basic info, and divider
             layout[0] = { lAnchor.x, lAnchor.y + 56, 400, 480 };
@@ -330,15 +333,20 @@ public:
         }
 
         // === draw =======================================================
-        // Render the movie panel to the screen.
+        // Render the movie panel to the screen. The reason parameter isn't
+        // const is because this draw function modifies the internal ini
+        // of the AccountManager object passed in.
         //
         // Parameters:
-        //      none
+        //      AccountManager reference
         // Returns:
         //      void
         // ================================================================
-        void draw()
+        void draw(AccountManager &acct)
         {
+            // Keep track of whether any action values change
+            bool isDelta = false;
+
             // Constant text fields
             char const *poster  = "Movie poster area";
             char const *detail  = "#010#Details";       // Paper with text
@@ -379,9 +387,9 @@ public:
             GuiLabel(layout[18], director[3]);
             GuiLabel(layout[19], genre);
             GuiLabel(layout[20], imdb);
-            GuiToggle(layout[21], super, &toggleSuperActive);
-            GuiToggle(layout[22], like, &toggleLikeActive);
-            GuiToggle(layout[23], loathe, &toggleLoatheActive);
+            GuiToggle(layout[21], super, &current[0]);
+            GuiToggle(layout[22], like, &current[1]);
+            GuiToggle(layout[23], loathe, &current[2]);
             GuiToggle(layout[24], fave, &toggleFaveActive);
             GuiToggle(layout[25], watch, &toggleWatchedActive);
             // Draw the description with wrapping.
@@ -395,6 +403,34 @@ public:
             GuiSetStyle(DEFAULT, TEXT_LINE_SPACING, linespace);
             GuiSetStyle(DEFAULT, TEXT_WRAP_MODE, TEXT_WRAP_NONE);
             GuiSetStyle(DEFAULT, TEXT_ALIGNMENT_VERTICAL, TEXT_ALIGN_MIDDLE);
+
+            // Check for differences and keep exclusivity for first three
+            for (int i = 0; i < 3; ++i) {
+                if (current[i] != previous[i]) {
+                    isDelta = true;     // There HAS been a change!
+                    // Reset values for others that aren't selected
+                    for (int j = 0; j < 3; ++j) {
+                        if (j != i)
+                            previous[j] = current[j] = false;
+                    }
+                    previous[i] = current[i];
+                    // We don't need to check after first change, break
+                    break;
+                }
+            }
+            // Special case: those last two
+            if (toggleFaveActive != previous[3] || toggleWatchedActive != previous[4]) {
+                isDelta = true;
+                previous[3] = toggleFaveActive;
+                previous[4] = toggleWatchedActive;
+            }
+
+            // Update the user ini if and only if there was a change
+            if (isDelta) {
+                // There was a delta change.
+                // Update the user ini with new values, casting away constness.
+                IniReader *ini = const_cast<IniReader *>(acct.getUserData());
+            }
         }
 
         // === Movie panel variables ======================================
@@ -403,13 +439,14 @@ public:
         Vector2 lAnchor;        // Left anchor, for poster
         Vector2 rAnchor;        // Right anchor, for details and actions
 
-        // These three toggles are mutually exclusive
-        bool toggleSuperActive;     // Is super-liked?
-        bool toggleLikeActive;      // Is liked?
-        bool toggleLoatheActive;    // Is it loathed?
-        // These are not
-        bool toggleFaveActive;      // Is it in favorites?
-        bool toggleWatchedActive;   // Has user watched the movie?
+        // The first three toggles are for superlike, like, and loathe,
+        // and must be mutially exclusive. The other two, favorite and
+        // watched, do not.
+        bool current[3];
+        bool toggleFaveActive;
+        bool toggleWatchedActive;
+        // Keep track of last boolean values as well
+        bool previous[5];
 
         // Define layout rectangles
         Rectangle layout[27];

@@ -167,7 +167,7 @@ void MedFlix::render()
             so.recommend.draw();
             break;
         case ScreenObjects::MOVIE_INFO:
-            so.movie.draw();
+            so.movie.draw(acct);
             break;
         case ScreenObjects::ACCOUNT:
             so.account.draw(acct);
