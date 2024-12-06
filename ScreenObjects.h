@@ -356,8 +356,11 @@ public:
             char const *tagAct  = "ACTIONS";
             char const *tagDesc = "DESCRIPTION";
             char const *super   = "#157#";              // Star
+            char const *suTip   = "SUPER AWESOME!";
             char const *like    = "#148#";              // 1-UP
+            char const *liTip   = "I like this";
             char const *loathe  = "#152#";              // Skull
+            char const *loTip   = "goofy aah movie";
             char const *fave    = "#186#Favorite";      // Heart
             char const *watch   =                       // Eye
                 toggleWatchedActive ? "#044#Watched" : "#045#Unwatched";
@@ -387,11 +390,21 @@ public:
             GuiLabel(layout[18], director[3]);
             GuiLabel(layout[19], genre);
             GuiLabel(layout[20], imdb);
-            GuiToggle(layout[21], super, &current[0]);
-            GuiToggle(layout[22], like, &current[1]);
-            GuiToggle(layout[23], loathe, &current[2]);
+            // We render favorite/watched before the user rating because
+            // the tooltip for loathe gets rendered under this which is ugly
             GuiToggle(layout[24], fave, &toggleFaveActive);
             GuiToggle(layout[25], watch, &toggleWatchedActive);
+            // Enable tooltips for just these next three toggles
+            GuiEnableTooltip();
+            GuiSetTooltip(suTip);
+            GuiToggle(layout[21], super, &current[0]);
+            GuiSetTooltip(liTip);
+            GuiToggle(layout[22], like, &current[1]);
+            GuiSetTooltip(loTip);
+            GuiToggle(layout[23], loathe, &current[2]);
+            // Disable tooltips again
+            GuiSetTooltip(NULL);
+            GuiDisableTooltip();
             // Draw the description with wrapping.
             GuiSetStyle(DEFAULT, TEXT_ALIGNMENT_VERTICAL, TEXT_ALIGN_TOP);
             GuiSetStyle(DEFAULT, TEXT_WRAP_MODE, TEXT_WRAP_WORD);
