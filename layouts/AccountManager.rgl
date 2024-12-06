@@ -1,7 +1,7 @@
 #
 # rgl layout text file (v4.0) - raygui layout file generated using rGuiLayout
 #
-# Number of controls:     9
+# Number of controls:     10
 #
 # Ref. window:    r <x> <y> <width> <height>
 # Anchor info:    a <id> <name> <posx> <posy> <enabled>
@@ -17,4 +17,5 @@ c 004 4 labelUser 24 88 80 24 1 Username:
 c 005 12 entryUser 112 88 176 24 1 
 c 006 4 labelPass 24 120 80 24 1 Password:
 c 007 12 entryPass 112 120 176 24 1 
-c 008 5 butSignin 96 176 120 24 1 Sign me in!
+c 008 5 butSignin 176 176 120 24 1 Sign me in!
+c 009 6 butHint 112 176 56 24 1 Get hint
