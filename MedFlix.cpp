@@ -58,6 +58,7 @@ MedFlix::MedFlix() : db("database.ini")
     so.status.init();
     so.sidebar.init();
     so.recommend.init();
+    so.movie.init();
     so.account.init();
 
     /* Cosmetics get! */
@@ -141,24 +142,15 @@ void MedFlix::render()
         case ScreenObjects::HOME:
             so.recommend.draw();
             break;
+        case ScreenObjects::MOVIE_INFO:
+            so.movie.draw();
+            break;
         case ScreenObjects::ACCOUNT:
             so.account.draw(acct);
             break;
         default:
             break;
         }
-
-        // Turn on word wrap and draw the text box with sample description
-        /*GuiSetStyle(DEFAULT, TEXT_ALIGNMENT_VERTICAL, TEXT_ALIGN_TOP);
-        GuiSetStyle(DEFAULT, TEXT_WRAP_MODE, TEXT_WRAP_WORD);
-        // yes it's temporary but still horrible
-        // we can copy this string only once and not every game loop lol
-        string dat = db("star wars", "descript");
-        dat.back() = 0x0;   // remove final quote
-        // Draw the text starting after the opening quote
-        GuiTextBox((Rectangle){ 40, 40, 300, 175 }, (char *)dat.data() + 1, 0, false);
-        GuiSetStyle(DEFAULT, TEXT_WRAP_MODE, TEXT_WRAP_NONE);
-        GuiSetStyle(DEFAULT, TEXT_ALIGNMENT_VERTICAL, TEXT_ALIGN_MIDDLE);*/
 
         // Draw the exit box if required
         if (exitPrompt) {

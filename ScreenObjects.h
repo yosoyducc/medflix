@@ -254,6 +254,173 @@ public:
         Rectangle layout[4];
     } recommend{*this};
 
+    // === Movie info panel ===============================================
+    //
+    // ====================================================================
+    struct {
+        ScreenObjects &p;
+
+        // === init =======================================================
+        // Initialize the movie viewing panel.
+        //
+        // Parameters:
+        //      Node pointer to a hashNode
+        // Returns:
+        //      void
+        // ================================================================
+        void init(/* Node *hashNode */)
+        {
+            // Anchors
+            lAnchor = { 160, 8 };
+            rAnchor = { 584, 8 };
+
+            // Controls
+            toggleSuperActive   = false;
+            toggleLikeActive    = false;
+            toggleLoatheActive  = false;
+            toggleFaveActive    = false;
+            toggleWatchedActive = false;
+
+            // Poster, name, basic info, and divider
+            layout[0] = { lAnchor.x, lAnchor.y + 56, 400, 480 };
+            layout[1] = { lAnchor.x + 24, lAnchor.y, 168, 48 };
+            layout[2] = { lAnchor.x + 216, lAnchor.y + 8, 176, 32 };
+            layout[3] = { lAnchor.x + 16, lAnchor.y + 40, 192, 16 };
+            // Detail group
+            layout[4] = { rAnchor.x, rAnchor.y + 64, 360, 448 };
+            // Tags: director, genre, imdb, actions, and description
+            layout[5] = { rAnchor.x + 24, rAnchor.y + 80, 112, 24 };
+            layout[6] = { rAnchor.x + 232, rAnchor.y + 80, 112, 24 };
+            layout[7] = { rAnchor.x + 232, rAnchor.y + 144, 112, 24 };
+            layout[8] = { rAnchor.x + 24, rAnchor.y + 216, 120, 24 };
+            layout[9] = { rAnchor.x + 24, rAnchor.y + 304, 120, 24 };
+            // Dividers for the above, in that order
+            layout[10] = { rAnchor.x + 16, rAnchor.y + 96, 120, 16 };
+            layout[11] = { rAnchor.x + 224, rAnchor.y + 96, 120, 16 };
+            layout[12] = { rAnchor.x + 224, rAnchor.y + 160, 120, 16 };
+            layout[13] = { rAnchor.x + 16, rAnchor.y + 232, 120, 16 };
+            layout[14] = { rAnchor.x + 16, rAnchor.y + 320, 120, 16 };
+            // Director labels (up to four directors)
+            layout[15] = { rAnchor.x + 32, rAnchor.y + 112, 160, 24 };
+            layout[16] = { rAnchor.x + 32, rAnchor.y + 136, 160, 24 };
+            layout[17] = { rAnchor.x + 32, rAnchor.y + 160, 160, 24 };
+            layout[18] = { rAnchor.x + 32, rAnchor.y + 184, 160, 24 };
+            // Genre and rating labels
+            layout[19] = { rAnchor.x + 240, rAnchor.y + 112, 120, 24 };
+            layout[20] = { rAnchor.x + 240, rAnchor.y + 176, 72, 24 };
+            // Toggles: superlike, like, loathe, fave, and watched
+            layout[21] = { rAnchor.x + 40, rAnchor.y + 256, 32, 32 };
+            layout[22] = { rAnchor.x + 88, rAnchor.y + 256, 32, 32 };
+            layout[23] = { rAnchor.x + 136, rAnchor.y + 256, 32, 32 };
+            layout[24] = { rAnchor.x + 208, rAnchor.y + 240, 112, 24 };
+            layout[25] = { rAnchor.x + 208, rAnchor.y + 272, 112, 24 };
+            // Finally, the film description
+            layout[26] = { rAnchor.x + 24, rAnchor.y + 336, 304, 176 };
+
+            // Variable text fields (TODO: move to own function)
+            name        = "Movie Name";
+            info        = "Year | Rating | Runtime";
+            director[0] = "Me ^_^";
+            director[1] = "Someone Else With Long Name";
+            director[2] = "Third Guy";
+            director[3] = "Me (again)";
+            genre       = "Awesome";
+            imdb        = "10.2";
+            descript    = "Some really cool stuff happens.";
+        }
+
+        // === draw =======================================================
+        // Render the movie panel to the screen.
+        //
+        // Parameters:
+        //      none
+        // Returns:
+        //      void
+        // ================================================================
+        void draw()
+        {
+            // Constant text fields
+            char const *poster  = "Movie poster area";
+            char const *detail  = "#010#Details";       // Paper with text
+            char const *tagDir  = "DIRECTOR";
+            char const *tagGen  = "GENRE";
+            char const *tagImdb = "IMDb";
+            char const *tagAct  = "ACTIONS";
+            char const *tagDesc = "DESCRIPTION";
+            char const *super   = "#157#";              // Star
+            char const *like    = "#148#";              // 1-UP
+            char const *loathe  = "#152#";              // Skull
+            char const *fave    = "#186#Favorite";      // Heart
+            char const *watch   =                       // Eye
+                toggleWatchedActive ? "#044#Watched" : "#045#Unwatched";
+
+            // Draw the left side (poster and basic info)
+            GuiDummyRec(layout[0], poster);
+            GuiLabel(layout[1], name);
+            GuiLabel(layout[2], info);
+            GuiLine(layout[3], NULL);
+            // Draw the right side (everything else)
+            GuiGroupBox(layout[4], detail);
+            GuiLabel(layout[5], tagDir);
+            GuiLabel(layout[6], tagGen);
+            GuiLabel(layout[7], tagImdb);
+            GuiLabel(layout[8], tagAct);
+            GuiLabel(layout[9], tagDesc);
+            GuiLine(layout[10], NULL);
+            GuiLine(layout[11], NULL);
+            GuiLine(layout[12], NULL);
+            GuiLine(layout[13], NULL);
+            GuiLine(layout[14], NULL);
+            GuiLabel(layout[15], director[0]);
+            GuiLabel(layout[16], director[1]);
+            GuiLabel(layout[17], director[2]);
+            GuiLabel(layout[18], director[3]);
+            GuiLabel(layout[19], genre);
+            GuiLabel(layout[20], imdb);
+            GuiToggle(layout[21], super, &toggleSuperActive);
+            GuiToggle(layout[22], like, &toggleLikeActive);
+            GuiToggle(layout[23], loathe, &toggleLoatheActive);
+            GuiToggle(layout[24], fave, &toggleFaveActive);
+            GuiToggle(layout[25], watch, &toggleWatchedActive);
+            // Draw the description with wrapping.
+            GuiSetStyle(DEFAULT, TEXT_ALIGNMENT_VERTICAL, TEXT_ALIGN_TOP);
+            GuiSetStyle(DEFAULT, TEXT_WRAP_MODE, TEXT_WRAP_WORD);
+            int linespace = GuiGetStyle(DEFAULT, TEXT_LINE_SPACING);
+            GuiSetStyle(DEFAULT, TEXT_LINE_SPACING, linespace - 4);
+            // Render the text
+            GuiLabel(layout[26], descript);
+            // Reset GUI styles
+            GuiSetStyle(DEFAULT, TEXT_LINE_SPACING, linespace);
+            GuiSetStyle(DEFAULT, TEXT_WRAP_MODE, TEXT_WRAP_NONE);
+            GuiSetStyle(DEFAULT, TEXT_ALIGNMENT_VERTICAL, TEXT_ALIGN_MIDDLE);
+        }
+
+        // === Movie panel variables ======================================
+        // Internal variables used by account panel.
+        // ================================================================
+        Vector2 lAnchor;        // Left anchor, for poster
+        Vector2 rAnchor;        // Right anchor, for details and actions
+
+        // These three toggles are mutually exclusive
+        bool toggleSuperActive;     // Is super-liked?
+        bool toggleLikeActive;      // Is liked?
+        bool toggleLoatheActive;    // Is it loathed?
+        // These are not
+        bool toggleFaveActive;      // Is it in favorites?
+        bool toggleWatchedActive;   // Has user watched the movie?
+
+        // Define layout rectangles
+        Rectangle layout[27];
+
+        // Variable text fields (TODO: move to own function)
+        char const *name;
+        char const *info;
+        char const *director[4];
+        char const *genre;
+        char const *imdb;
+        char const *descript;
+    } movie{*this};
+
     // === Account panel ==================================================
     //
     // ====================================================================
