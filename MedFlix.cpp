@@ -142,7 +142,7 @@ void MedFlix::render()
             so.recommend.draw();
             break;
         case ScreenObjects::ACCOUNT:
-            so.account.draw();
+            so.account.draw(acct);
             break;
         default:
             break;
@@ -170,13 +170,13 @@ void MedFlix::render()
             // Bring attention to exit box by fading out other elements above
             DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), GuiFade(background, 0.7));
             // Draw message box and get response from user
-            int choice = GuiMessageBox(bounds, "#141#EXIT PROGRAM", "Really quit MedFlix?", "Yes :(;No");
+            int choice = GuiMessageBox(bounds, "#141#EXIT PROGRAM", "Really quit MedFlix?", "Yes :( [y];No [esc]");
 
             // If the user closes prompt or hits no
             if (choice == 0 || choice == 2)
                 exitPrompt = false;     // no longer display the exit box
             // If the user wants to exit
-            else if (choice == 1)
+            else if (choice == 1 || IsKeyPressed(KEY_Y))
                 programShouldClose = true;
             // If user doesn't choose anything
 

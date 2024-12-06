@@ -124,7 +124,7 @@ public:
         // Draw the program sidebar to the screen.
         //
         // Parameters:
-        //      none
+        //      Account object (for determining sign in status)
         // Returns:
         //      void
         // ================================================================
@@ -311,11 +311,11 @@ public:
         // Render the account panel to the screen, based on login status.
         //
         // Parameters:
-        //      Account type
+        //      Account object (determine sign in status)
         // Returns:
         //      void
         // ================================================================
-        void draw(/*Account acct*/)
+        void draw(AccountManager const &acct)
         {
             if (dropActionEditMode || showHintBox) GuiLock();
 
@@ -422,10 +422,20 @@ public:
                 GuiLock();
             }
 
-            // Get around some annoying bug where focus is kept on
-            // entry box even after hitting enter
+            // Surfing on a keyboard!
+            if (IsKeyPressed(KEY_TAB)) {
+                if (entryUserEditMode) {
+                    entryUserEditMode = false;
+                    entryPassEditMode = true;
+                } else if (entryPassEditMode) {
+                    entryUserEditMode = true;
+                    entryPassEditMode = false;
+                } else {
+                    entryUserEditMode = true;
+                }
+            }
             if (IsKeyPressed(KEY_ENTER))
-                entryUserEditMode = entryPassEditMode = false;
+                butSigninPressed = true;
 
             GuiUnlock();
         }
