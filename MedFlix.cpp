@@ -79,6 +79,25 @@ void MedFlix::update()
     if (WindowShouldClose())
         programShouldClose = true;
 
+    // Keyboard shortcuts to switch screens without mouse :)
+    if (acct.signedIn() && IsKeyDown(KEY_LEFT_CONTROL)) switch (GetKeyPressed()) {
+        case KEY_A:
+            so.sidebar.listActive = ScreenObjects::HOME;
+            break;
+        case KEY_E:
+            so.sidebar.listActive = ScreenObjects::MY_LISTS;
+            break;
+        case KEY_F:
+            so.sidebar.listActive = ScreenObjects::SEARCH;
+            break;
+        case KEY_V:
+            so.sidebar.listActive = ScreenObjects::MOVIE_INFO;
+            break;
+        case KEY_M:
+            so.sidebar.listActive = ScreenObjects::ACCOUNT;
+            break;
+    }
+
     // If sign in button is pressed, determine which mode is
     // selected then take an appropriate action
     if (so.account.butSigninPressed) switch (so.account.dropActionActive) {
@@ -162,13 +181,13 @@ void MedFlix::render()
             // Bring attention to exit box by fading out other elements above
             DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), GuiFade(background, 0.7));
             // Draw message box and get response from user
-            int choice = GuiMessageBox(bounds, "#141#EXIT PROGRAM", "Really quit MedFlix?", "Yes :( [y];No [esc]");
+            int choice = GuiMessageBox(bounds, "#141#EXIT PROGRAM", "Really quit MedFlix? :(", "Yes  [ENTER];No  [ESC]");
 
             // If the user closes prompt or hits no
             if (choice == 0 || choice == 2)
                 exitPrompt = false;     // no longer display the exit box
             // If the user wants to exit
-            else if (choice == 1 || IsKeyPressed(KEY_Y))
+            else if (choice == 1 || IsKeyPressed(KEY_ENTER))
                 programShouldClose = true;
             // If user doesn't choose anything
 

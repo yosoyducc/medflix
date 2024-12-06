@@ -131,14 +131,14 @@ public:
         void draw(AccountManager const &acct)
         {
             char const *head = "MedFlix";
-            char const *list = "#185#Home;#186#Favorites;#043#Search;#169#Movie Info;#151#Account;#159#Quit";
+            char const *list = "#185#Home [^A];#186#Favorites [^E];#043#Search [^F];#169#Movie Info [^V];#151#Account [^M];#159#Quit [ESC]";
 
             // Calculate offsets for when signed in and out
             int listOffTxt = 0;
             listActiveOff = HOME;
             if (!acct.signedIn()) {
                 // Set sign-out offsets
-                listOffTxt = 53;
+                listOffTxt = 73;
                 listActiveOff = ACCOUNT;
             }
 
