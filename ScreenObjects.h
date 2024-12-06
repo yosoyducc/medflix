@@ -165,8 +165,6 @@ public:
         bool headerPressed;
         // Rectangle definitions for list and header
         Rectangle layout[2];
-
-        // For clarification of the index
     } sidebar{*this};
 
     // === Recommended panel ==============================================
