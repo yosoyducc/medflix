@@ -156,6 +156,14 @@ void MedFlix::render()
             so.sidebar.listActive = listActiveLast;
         }
 
+        // When signed out, there's not a known way I can think of that allows
+        // the user to enter a screen by accident. However, when logged out,
+        // and no elements are selected, listActiveTrue would be 3, which would
+        // display the movie info tab. To prevent this, we simply manually set
+        // listActiveTrue to -1 if this value also goes below 0
+        if (so.sidebar.listActive < 0)
+            listActiveTrue = -1;
+
         // Render the main surface based on what tab is selected
         switch (listActiveTrue) {
         case ScreenObjects::HOME:
