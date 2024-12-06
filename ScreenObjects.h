@@ -283,7 +283,7 @@ public:
 
             butSigninPressed = false;
 
-            loginFailTimeout = 0.0f;
+            labelTimeout = 0.0f;
 
             // Account management window dimensions
             layout[0] = { anchor.x, anchor.y, 312, 216 };
@@ -302,7 +302,9 @@ public:
             // password entry
             layout[7] = { anchor.x + 112, anchor.y + 120, 176, 24 };
             // sign me in button!
-            layout[8] = { anchor.x + 96, anchor.y + 176, 120, 24 };
+            layout[8] = { anchor.x + 176, anchor.y + 176, 120, 24 };
+            // get hint button label
+            layout[9] = { anchor.x + 112, anchor.y + 176, 56, 24 };
         }
 
         // === draw =======================================================
@@ -315,7 +317,7 @@ public:
         // ================================================================
         void draw(/*Account acct*/)
         {
-            if (dropActionEditMode) GuiLock();
+            if (dropActionEditMode || showHintBox) GuiLock();
 
             char const *panelTitle  = "#137#Account Manager";
             char const *labelSignin = dropActionActive ? "New account creation" : "Please sign in.";
@@ -324,11 +326,30 @@ public:
             char const *password    = "Password:";
             char const *signMeIn    = dropActionActive ? "Register me!" : "Sign me in!";
             char const *dropdown    = "SIGN IN;REGISTER";
+            char const *labelHint   = "Get hint";
 
-            // Check if the login was failed
-            if (loginFailTimeout > 0) {
-                labelSignin = "ERROR: Auth failed! Wrong user/pass?";
-                loginFailTimeout -= GetFrameTime();
+            // Check if there's an active label message
+            if (labelTimeout > 0) {
+                switch (labelMsgCode) {
+                    case SIGN_IN_FAIL:
+                        labelSignin = "Auth failed! Bad user/pass?";
+                        break;
+                    case SIGN_OUT_PASS:
+                        labelSignin = "Successfully signed out.";
+                        break;
+                    case SIGN_OUT_FAIL:
+                        labelSignin = "Failed to save user data!";
+                        break;
+                    case REGISTRY_PASS:
+                        labelSignin = "Registration successful!";
+                        break;
+                    case REGISTRY_FAIL:
+                        labelSignin = "Failed to register account!";
+                        break;
+                    default:
+                        labelSignin = "Unknown path was encountered";
+                }
+                labelTimeout -= GetFrameTime();
             }
 
             // Update anchor position and all attached elements
@@ -358,8 +379,12 @@ public:
             layout[6].y = anchor.y + 120;
             layout[7].x = anchor.x + 112;
             layout[7].y = anchor.y + 120;
-            layout[8].x = anchor.x + 96;
+            layout[8].x = anchor.x + 176;
             layout[8].y = anchor.y + 176;
+            if (showButHint) {
+                layout[9].x = anchor.x + 112;
+                layout[9].y = anchor.y + 176;
+            }
 
             // Render the gui to the screen.
             GuiPanel(layout[0], panelTitle);
@@ -372,8 +397,30 @@ public:
             if (GuiTextBox(layout[7], entryPassText, 32, entryPassEditMode))
                 entryPassEditMode = !entryPassEditMode;
             butSigninPressed = GuiButton(layout[8], signMeIn);
+            if (showButHint)
+                butHintPressed = GuiLabelButton(layout[9], labelHint);
             if (GuiDropdownBox(layout[1], dropdown, &dropActionActive, dropActionEditMode))
                 dropActionEditMode = !dropActionEditMode;
+
+            // Render the hints
+            if (butHintPressed)
+                showHintBox = true;
+            if (showHintBox) {
+                GuiUnlock();
+
+                // calculate boundaries of the box
+                float hwidth  = GetScreenWidth() / 2.0f,
+                      hheight = GetScreenHeight() / 2.0f;
+                Rectangle bounds = { hwidth - 200, hheight - 75, 400, 150 };
+                int choice = GuiMessageBox(bounds, "#193#Hint", "Username must have at least 3 characters,\npassword must have at least 5 characters.", "I understand");
+
+                if (choice >= 0) {
+                    showHintBox = false;
+                    showButHint = false;
+                }
+
+                GuiLock();
+            }
 
             // Get around some annoying bug where focus is kept on
             // entry box even after hitting enter
@@ -381,6 +428,23 @@ public:
                 entryUserEditMode = entryPassEditMode = false;
 
             GuiUnlock();
+        }
+
+        // === setLabel ===================================================
+        // Set the label message via code for the account management panel.
+        // This message will last for 3.5 seconds.
+        //
+        // Parameters:
+        //      int error code (try the enum!)
+        // Returns:
+        //      void
+        // ================================================================
+        void setLabelMessage(int code)
+        {
+            // Set the error timeout.
+            labelTimeout = 3.5f;
+            // And the message code.
+            labelMsgCode = code;
         }
 
         // === account panel variables ====================================
@@ -398,9 +462,21 @@ public:
         char entryPassText[32];
 
         bool butSigninPressed;
+        bool showButHint;
+        bool showHintBox;
+        bool butHintPressed;
 
-        float loginFailTimeout;
+        float labelTimeout;
+        int labelMsgCode;
+        enum AuthMessage {
+            // no need for success sign in message
+            SIGN_IN_FAIL,
+            SIGN_OUT_PASS,
+            SIGN_OUT_FAIL,
+            REGISTRY_PASS,
+            REGISTRY_FAIL,
+        };
 
-        Rectangle layout[9];
+        Rectangle layout[10];
     } account{*this};
 };

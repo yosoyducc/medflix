@@ -92,19 +92,18 @@ void MedFlix::update()
             so.sidebar.listActive = ScreenObjects::HOME;
         } else {
             // TODO: set label message to account sign in fail
-            so.account.loginFailTimeout = 3.5f;
+            so.account.setLabelMessage(so.account.SIGN_IN_FAIL);
         }
         break;
     case 1:     // REGISTER mode
         if (AccountManager::create(so.account.entryUserText, so.account.entryPassText)) {
-            // TODO: set label message to account registration success
+            // Creation of account was success
+            so.account.setLabelMessage(so.account.REGISTRY_PASS);
         } else {
-            // TODO: TEMPORARY: sign out user if failed account creation (only way to sign out right now)
-            if (acct.signOut())
-                TraceLog(LOG_INFO, "Successfully signed out.");
-            // set to Account page (remember the offsets)
-            so.sidebar.listActive = ScreenObjects::HOME;
-            so.account.loginFailTimeout = 3.0f;
+            // Creation was fail
+            so.account.setLabelMessage(so.account.REGISTRY_FAIL);
+            // Show username/password requirements
+            so.account.showButHint = true;
         }
         break;
     }
