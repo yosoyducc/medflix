@@ -272,7 +272,7 @@ public:
         {
             // Anchors
             lAnchor = { 160, 8 };
-            rAnchor = { 584, 8 };
+            rAnchor = { 580, 0 };
 
             // Controls
             toggleSuperActive   = false;
@@ -356,7 +356,9 @@ public:
 
             // Draw the left side (poster and basic info)
             GuiDummyRec(layout[0], poster);
+            GuiSetStyle(DEFAULT, TEXT_SIZE, 32);
             GuiLabel(layout[1], name);
+            GuiSetStyle(DEFAULT, TEXT_SIZE, 16);
             GuiLabel(layout[2], info);
             GuiLine(layout[3], NULL);
             // Draw the right side (everything else)

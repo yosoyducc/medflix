@@ -142,9 +142,6 @@ void MedFlix::render()
     BeginDrawing();
         ClearBackground(background);
 
-        // Draw bottom-most status bar
-        so.status.draw();
-
         // Draw left hand menu bar with signout offset,
         // checking whether the user wants to quit first
         int listActiveLast = so.sidebar.listActive;
@@ -178,6 +175,9 @@ void MedFlix::render()
         default:
             break;
         }
+
+        // Draw bottom-most status bar
+        so.status.draw();
 
         // Draw the exit box if required
         if (exitPrompt) {
