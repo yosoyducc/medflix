@@ -1,0 +1,39 @@
+#
+# rgl layout text file (v4.0) - raygui layout file generated using rGuiLayout
+#
+# Number of controls:     27
+#
+# Ref. window:    r <x> <y> <width> <height>
+# Anchor info:    a <id> <name> <posx> <posy> <enabled>
+# Control info:   c <id> <type> <name> <rectangle> <anchor_id> <text>
+#
+r 0 40 -1 -1
+a 001 leftAnchor 48 48 1
+a 002 rightAnchor 472 48 1
+c 000 23 poster 0 56 400 480 1 Movie poster area
+c 001 4 name 24 0 168 48 1 Movie Name
+c 002 4 basicInfo 216 8 176 32 1 Year | Rating | Runtime
+c 003 2 divName 16 40 192 16 1 
+c 004 1 detail 0 64 360 448 2 #010#Details
+c 005 4 tagDirector 24 80 112 24 2 DIRECTOR
+c 006 4 tagGenre 232 80 112 24 2 GENRE
+c 007 4 tagImdb 232 144 112 24 2 IMDb
+c 008 4 tagActions 24 216 120 24 2 ACTIONS
+c 009 4 tagDescript 24 304 120 24 2 DESCRIPTION
+c 010 2 divDirector 16 96 120 16 2 
+c 011 2 divGenre 224 96 120 16 2 
+c 012 2 divImdb 224 160 120 16 2 
+c 013 2 divActions 16 232 120 16 2 
+c 014 2 divDescript 16 320 120 16 2 
+c 015 4 director0 32 112 160 24 2 Me ^_^
+c 016 4 director1 32 136 160 24 2 Someone Else With Long Name
+c 017 4 director2 32 160 160 24 2 Third Guy
+c 018 4 director3 32 184 160 24 2 Me (again)
+c 019 4 labelGenre 240 112 120 24 2 Awesome
+c 020 4 labelRating 240 176 72 24 2 10.2
+c 021 8 toggleSuper 40 256 32 32 2 #157#
+c 022 8 toggleLike 88 256 32 32 2 #148#
+c 023 8 toggleLoathe 136 256 32 32 2 #152#
+c 024 8 toggleFave 208 240 112 24 2 #186#Favorite
+c 025 8 toggleWatched 208 272 112 24 2 #045#Unwatched
+c 026 4 descript 24 336 304 176 2 Some really cool stuff happens.
