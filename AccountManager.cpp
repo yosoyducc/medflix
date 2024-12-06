@@ -33,6 +33,10 @@ AccountManager::~AccountManager()
 
 bool AccountManager::create(char const *u, char const *p)
 {
+    // Check that the username satisfies basic length conditions
+    if (TextLength(u) < 3 || TextLength(p) < 5)
+        return false;
+
     // Get the file name for this user by formatting the username
     // and check that this file doesn't exist by opening it for reading
     char const *uf = TextFormat(USER_DB_PREFIX "%s.ini", u);
