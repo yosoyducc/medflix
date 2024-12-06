@@ -388,11 +388,15 @@ public:
             char const *watch   =                       // Eye
                 toggleWatchedActive ? "#044#Watched" : "#045#Unwatched";
 
+            // Get default fontstyle properties
+            int const fontSize  = GuiGetStyle(DEFAULT, TEXT_SIZE);
+            int const lineSpace = GuiGetStyle(DEFAULT, TEXT_LINE_SPACING);
+
             // Draw the left side (poster and basic info)
             GuiDummyRec(layout[0], poster);
-            GuiSetStyle(DEFAULT, TEXT_SIZE, 32);
+            GuiSetStyle(DEFAULT, TEXT_SIZE, fontSize * 2);
             GuiLabel(layout[1], name);
-            GuiSetStyle(DEFAULT, TEXT_SIZE, 16);
+            GuiSetStyle(DEFAULT, TEXT_SIZE, fontSize);
             GuiLabel(layout[2], info);
             GuiLine(layout[3], NULL);
             // Draw the right side (everything else)
@@ -431,12 +435,11 @@ public:
             // Draw the description with wrapping.
             GuiSetStyle(DEFAULT, TEXT_ALIGNMENT_VERTICAL, TEXT_ALIGN_TOP);
             GuiSetStyle(DEFAULT, TEXT_WRAP_MODE, TEXT_WRAP_WORD);
-            int linespace = GuiGetStyle(DEFAULT, TEXT_LINE_SPACING);
-            GuiSetStyle(DEFAULT, TEXT_LINE_SPACING, linespace - 4);
+            GuiSetStyle(DEFAULT, TEXT_LINE_SPACING, lineSpace - 4);
             // Render the text
             GuiLabel(layout[26], descript);
             // Reset GUI styles
-            GuiSetStyle(DEFAULT, TEXT_LINE_SPACING, linespace);
+            GuiSetStyle(DEFAULT, TEXT_LINE_SPACING, lineSpace);
             GuiSetStyle(DEFAULT, TEXT_WRAP_MODE, TEXT_WRAP_NONE);
             GuiSetStyle(DEFAULT, TEXT_ALIGNMENT_VERTICAL, TEXT_ALIGN_MIDDLE);
 
