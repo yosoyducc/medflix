@@ -142,7 +142,7 @@ bool AccountManager::signOut()
     return writeStatus;
 }
 
-IniReader const *AccountManager::getUserData()
+IniReader const *AccountManager::getUserData() const
 {
     return user;
 }

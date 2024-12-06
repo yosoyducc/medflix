@@ -85,7 +85,7 @@ public:
     // Returns:
     //      pointer to user data
     // ====================================================================
-    IniReader const *getUserData();
+    IniReader const *getUserData() const;
 
 private:
     IniReader *user;        // Account information (null if signed out)
