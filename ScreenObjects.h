@@ -387,15 +387,26 @@ public:
         // ================================================================
         void unload()
         {
-            name = year = rating
-            = runtime = genre
-            = director[0] = director[1]
-            = director[2] = director[3]
-            = descript = imdb = poster
-            = nullptr;
+            name        =
+            year        =
+            rating      =
+            runtime     =
+            genre       =
+            director[0] =
+            director[1] =
+            director[2] =
+            director[3] =
+            descript    =
+            imdb        =
+            poster      = nullptr;
+
             for (int i = 0; i < 3; ++i)
-                previous[i] = current[i] = false;
-            toggleFaveActive = toggleWatchedActive = false;
+                current[i]      = false;
+            toggleFaveActive    = false;
+            toggleWatchedActive = false;
+
+            for (int i = 0; i < 5; ++i)
+                previous[i]     = false;
         }
 
         // === draw =======================================================
