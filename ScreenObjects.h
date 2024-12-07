@@ -22,7 +22,6 @@
 #include "AccountManager.h"     // determine if we're signed in or not
 #include "IniReader.h"
 #include "HashTable.h"
-#include <cstddef>
 
 // Include raygui/raylib as C library
 extern "C" {
@@ -498,6 +497,52 @@ public:
                 // There was a delta change.
                 // Update the user ini with new values, casting away constness.
                 IniReader *ini = const_cast<IniReader *>(acct.getUserData());
+
+                // Get movie section index in user database, and
+                // determine if it exists.
+                int si = ini->findSection(name);
+                bool siExists = si > 0;     // don't count the global section
+                
+                // Determine if there's any truths among the booleans
+                // -> we need a section, otherwise we don't.
+                bool isTruth = false;
+                for (int i = 0; i < 4; ++i) {
+                    if (i != 3 && current[i]) {
+                        isTruth = true;
+                        break;
+                    } else if (toggleFaveActive || toggleWatchedActive) {
+                        isTruth = true;
+                    }
+                }
+
+                // Determine action with the section, based on above.
+                if (!isTruth) {     // i used to float*, now i just delete;
+                    // dropSection already accounts for invalid sections
+                    ini->dropSection(si);
+                } else {            // TRUTH. LET ME TELL YOU HOW TRULY I'VE...
+                    if (!siExists) {
+                        // Add section and set section index var to result
+                        si = ini->addSection(name);
+                        // Add the empty properties
+                        ini->addProperty(si, "Like", "");
+                        ini->addProperty(si, "Favorite", "");
+                        ini->addProperty(si, "Watched", "");
+                    }
+                    // Edit the values based on current bools.
+                    // This could be slightly optimized. Because these
+                    // properties are always guaranteed to be sequential
+                    // (i.e. in order), we can avoid using the time-complex
+                    // setPropertyValue function and edit the IniProperties
+                    // vector directly instead.
+                    ini->setPropertyValue(si, 0,
+                        current[0] ? "2" :          // superlike
+                        current[1] ? "1" :          // like
+                        current[2] ? "-1" : "0");   // loathe or no rating
+                    ini->setPropertyValue(si, 1,
+                        toggleFaveActive ? "1" : "0");      // favorite or not
+                    ini->setPropertyValue(si, 2,
+                        toggleWatchedActive ? "1" : "0");   // watched or not
+                }
             }
         }
 
