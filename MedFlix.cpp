@@ -58,6 +58,7 @@ MedFlix::MedFlix() : db("database.ini")
     so.status.init();
     so.sidebar.init();
     so.recommend.init();
+    so.favorites.init();
     so.movie.init();
     so.account.init();
 
@@ -165,6 +166,9 @@ void MedFlix::render()
         switch (listActiveTrue) {
         case ScreenObjects::HOME:
             so.recommend.draw();
+            break;
+        case ScreenObjects::MY_LISTS:
+            so.favorites.draw();
             break;
         case ScreenObjects::MOVIE_INFO:
             so.movie.draw(acct);
