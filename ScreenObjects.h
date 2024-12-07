@@ -258,6 +258,93 @@ public:
         Rectangle layout[4];
     } recommend{*this};
 
+    // === Favorites panel ================================================
+    // Dangerously similar code to Recommend.
+    // ====================================================================
+    struct Favorites {
+        ScreenObjects &p;
+
+        // === init =======================================================
+        // Initialize the Favorites panel.
+        //
+        // Parameters:
+        //      none
+        // Returns:
+        //      void
+        // ================================================================
+        void init()
+        {
+            // Set anchor position
+            anchor = { 160, 8 };
+
+            // Panel stuff
+            panelScrollView = { 0 };
+            panelScrollOffset = { 0 };
+            panelBoundsOffset = { 0 };
+            refreshPressed = false;
+
+            // Default boundaries
+            // Backdrop
+            layout[0] = { anchor.x, anchor.y, 256, 256 };
+            // Header
+            layout[1] = { anchor.x + 16, anchor.y + 8, 192, 24 };
+            // Scroll panel
+            layout[2] = { anchor.x + 8, anchor.y + 40, 240, 208 };
+            // Button
+            layout[3] = { anchor.x + 216, anchor.y + 8, 24, 24 };
+        }
+
+        // === draw =======================================================
+        // Draw the favorites panel to the screen.
+        //
+        // Parameters:
+        //      none
+        // Returns:
+        //      void
+        // ================================================================
+        void draw()
+        {
+            char const *header = "#186#Favorites";
+            char const *button = "#211#";
+
+            // Update the backdrop and panel widths/heights
+            int w = GetScreenWidth() - anchor.x;
+            int h = GetScreenHeight() - anchor.y;
+
+            // Update back panel width/height
+            layout[0].width  = w - 8;
+            layout[0].height = h - p.status.layout.height - 8;
+            // Update header width: subtract button width and combined padding
+            layout[1].width  = w - layout[3].width - 48;
+            // Update scroll panel dimensions, padding pre-calculated
+            layout[2].width  = w - 24;
+            layout[2].height = h - layout[1].height - p.status.layout.height - 32;
+            // Update button position on the x-axis
+            layout[3].x      = anchor.x + layout[1].width + 24;
+
+            // Draw the panel backdrop
+            GuiDummyRec(layout[0], nullptr);
+            GuiLine(layout[1], header);
+            GuiScrollPanel(layout[2], nullptr, layout[2], &panelScrollOffset, &panelScrollView);
+            refreshPressed = GuiButton(layout[3], button);
+        }
+
+        // === favorites variables ========================================
+        // Internal variables used by favorites panel.
+        // ================================================================
+        // Anchor for the favorites panel
+        Vector2 anchor;
+
+        // Movies panels variables
+        Rectangle panelScrollView;
+        Vector2 panelScrollOffset;
+        Vector2 panelBoundsOffset;
+        bool refreshPressed;
+
+        // Rectangle definitions
+        Rectangle layout[4];
+    } favorites{*this};
+
     // === Movie info panel ===============================================
     //
     // ====================================================================
