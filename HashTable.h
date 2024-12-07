@@ -42,21 +42,24 @@ struct MovieNode {
 };
 
 // Not declared or implemented yet.
-/*
+
 class HashTable {
 private:
-    static const int SIZE = 7;
-    Node* dataMap[SIZE];
-
+    static const int SIZE = 1453;
+    MovieNode* dataMap[SIZE];
+    //std::vector<MovieNode*> fav;
+    //std::vector<int> watched;
+    //std::vector<MovieNode*> liked;
     int hash(std::string const &key);
 
 public:
     ~HashTable();
     //adds a teacher and their information to the linked list
-    void set(std::string name, prof_data courses);
+    void set(std::string hashname, const std::string &name1,const std::string &year1,const std::string &rating1,const std::string &runtime1,
+const std::string &genre1,const std::string &director1,const std::string &descript1,const std::string &imdb1,const std::string &poster1);
 
     // For a given professor name, get courses
-    prof_data const *getCourses(std::string &name);
+    //prof_data const *getCourses(std::string &name);
 
     //creates a list of all teachers
     std::vector<std::string> getNames();
@@ -81,5 +84,9 @@ public:
 
     // check if id already registered
     bool check(int id, std::string &teacher, std::string &course);
+
+    std::vector<MovieNode*> search(std::string &movieSearch);
+
+    void recommend();
 };
-*/
+
