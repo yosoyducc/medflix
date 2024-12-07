@@ -28,8 +28,8 @@ MovieNode::MovieNode(string const &n, string const &y, string const &ra, string 
 { }
 
 // Below code does NOT work yet.
-/*
-/ **** HashTable Class **** /
+
+/// **** HashTable Class **** /
 
 // ==== hash ==============================================================
 // This number is used as the index for how the teachers and their
@@ -48,7 +48,7 @@ int HashTable::hash(std::string const &key)
         int asciiValue = hash + key[i];
         hash = (hash + asciiValue * 23) % SIZE;
     }
-
+    //std::cout<<hash<<std::endl;
     return hash;
 }
 
@@ -56,8 +56,8 @@ int HashTable::hash(std::string const &key)
 HashTable::~HashTable()
 {
     for (int i = 0; i < SIZE; ++i) {
-        Node* head = dataMap[i];
-        Node* temp = head;
+        MovieNode* head = dataMap[i];
+        MovieNode* temp = head;
 
         while (head) {
             head = head->next;
@@ -77,16 +77,17 @@ HashTable::~HashTable()
 // Output:
 //
 // =============================================================================
-void HashTable::set(std::string name, prof_data courses)
+void HashTable::set(std::string hashname, const std::string &name1,const std::string &year1,const std::string &rating1,const std::string &runtime1,
+const std::string &genre1,const std::string &director1,const std::string &descript1,const std::string &imdb1,const std::string &poster1)
 {
-    int index = hash(name);
+    int index = hash(hashname);
 
-    Node* newNode = new Node(name, courses);
+    MovieNode* newNode = new MovieNode(name1, year1,rating1,runtime1,genre1,director1,descript1,imdb1,poster1);
 
     if (dataMap[index] == nullptr)
         dataMap[index] = newNode;
     else {
-        Node* temp = dataMap[index];
+        MovieNode* temp = dataMap[index];
         while (temp->next != nullptr)
             temp = temp->next;
 
@@ -94,6 +95,38 @@ void HashTable::set(std::string name, prof_data courses)
     }
 }
 
+std::vector<MovieNode*> HashTable::search(std::string &movieSearch) {
+    int index = hash(movieSearch);
+    std::transform(movieSearch.begin(), movieSearch.end(), movieSearch.begin(), ::toupper);
+
+    MovieNode* temp = dataMap[index];
+    std::vector<MovieNode*> results;
+
+    while (temp != nullptr) {
+        std::string aux = temp->name;
+        std::transform(aux.begin(), aux.end(), aux.begin(), ::toupper);
+        if (aux == movieSearch) {
+            movieSearch = temp->name;
+            results.push_back(temp);
+        }
+        temp = temp->next;
+    }
+    return results;
+}
+
+//this should only be called when the program
+//starts and when a user adds something
+//or removes something from liked or watched
+void HashTable::recommend() {
+    //string genres[5];
+    for(int i = 0; i<liked.size();i++) {
+
+    }
+}
+
+
+
+/*
 // ==== getCourses ==============================================================
 // this returns the professor data for a given teacher, and updates teacher
 // name if case isn't quite the same as in hash map
