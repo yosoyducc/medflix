@@ -265,6 +265,17 @@ class IniReader {
     // ====================================================================
     std::string const &operator()(std::string const &section, std::string const &key) const;
 
+    // === _propertyIndex =================================================
+    // Get the global index of a key-value property in `properties`.
+    // The global index is the index of this property disregarding offsets
+    // like the section index. Public, but usually shouldn't be used.
+    //
+    // Parameters:
+    //      int section and property
+    // Returns:
+    //      index of the property
+    // ====================================================================
+    int _propertyIndex(int section, int property) const;
 
   private:
     std::string    fileName;    // origin file name
@@ -273,18 +284,6 @@ class IniReader {
 
     // for returning on reference-returning functions
     static std::string const ZEROSTR;
-
-    // === _propertyIndex =================================================
-    // Get the global index of a key-value property in `properties`.
-    // The global index is the index of this property disregarding offsets
-    // like the section index. Only used internally.
-    //
-    // Parameters:
-    //      int section and property
-    // Returns:
-    //      index of the property
-    // ====================================================================
-    int _propertyIndex(int section, int property) const;
 
     // === _strieq ========================================================
     // Case-insensitive strings comparison. Returns true if equal.
