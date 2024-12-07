@@ -445,6 +445,16 @@ public:
             imdb = movie->imdb.data();
             poster = movie->imdb.data();
 
+            // Calculate movie name dimensions and add offset to name and basic info
+            int fontSize = GuiGetStyle(DEFAULT, TEXT_SIZE);
+            int spacing = GuiGetStyle(DEFAULT, TEXT_SPACING);
+            namePx = MeasureTextEx(GuiGetFont(), name, fontSize * 2.0f, spacing);
+            layout[1].width = namePx.x;
+            if (layout[1].width > 560)
+                layout[1].width = 560;      // cap width of movie name (BORAT!!!)
+            // Including left padding for basic info
+            layout[2].x = layout[1].x + layout[1].width + 24;
+
             // Populate toggle variables with preferences from user ini
             try {
                 IniReader const &ini = *acct.getUserData();
@@ -494,6 +504,8 @@ public:
 
             for (int i = 0; i < 5; ++i)
                 previous[i]     = false;
+
+            namePx = (Vector2){ 0, 0 };
         }
 
         // === draw =======================================================
@@ -688,6 +700,7 @@ public:
 
         // Variable text fields (TODO: move to own function)
         char const *name;
+        Vector2     namePx;     // dimensions of movie name (width, height)
         char const *info;
         char const *year;
         char const *rating;
