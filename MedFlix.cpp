@@ -31,8 +31,6 @@ extern "C" {
 
 using std::string;
 
-static MovieNode *node;
-
 // Use initializer list to call IniReader's constructor for `db`
 // notice that this is called before we enter this constructor.
 MedFlix::MedFlix() : db("database.ini")
@@ -62,11 +60,6 @@ MedFlix::MedFlix() : db("database.ini")
     so.recommend.init();
     so.movie.init();
     so.account.init();
-
-    // TODO: delete this
-    // memory error might be occurring because strings go out of scope?
-    node = new MovieNode("The Land Before Time", "1988", "G", "1:09", "Action", "Don Bluth", "An orphaned brontosaurus teams up with other young dinosaurs in order to reunite with their families in a valley.", "7.4", "LandBeforeTime.jpg");
-    so.movie.load(node);
 
     /* Cosmetics get! */
     // Load style definition and get properties for this style
