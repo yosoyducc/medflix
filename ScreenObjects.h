@@ -322,16 +322,8 @@ public:
             // Finally, the film description
             layout[26] = { rAnchor.x + 24, rAnchor.y + 336, 304, 176 };
 
-            // Variable text fields (TODO: move to own function)
-            name        = "Movie Name";
-            info        = "Year | Rating | Runtime";
-            director[0] = "Me ^_^";
-            director[1] = "Someone Else With Long Name";
-            director[2] = "Third Guy";
-            director[3] = "Me (again)";
-            genre       = "Awesome";
-            imdb        = "10.2";
-            descript    = "Some really cool stuff happens.";
+            // Nullify the internal values at startup
+            unload();
         }
 
         // === load =======================================================
@@ -344,15 +336,43 @@ public:
         // ================================================================
         void load(MovieNode const *movie)
         {
-            // TODO: memory error here
-            //name = movie->name.data();
-            //year = movie->year.data();
-            //rating = movie->rating.data();
-            //runtime = movie->runtime.data();
+            if (movie == nullptr)
+                return;
+
+            name = movie->name.data();
+            year = movie->year.data();
+            rating = movie->rating.data();
+            runtime = movie->runtime.data();
+            genre = movie->genre.data();
             int textCount;
             char const **text = TextSplit(movie->director.data(), ',', &textCount);
+            // We ignore textCount return value and just put four
             for (int i = 0; i < 4; ++i)
                 director[i] = text[i];
+            descript = movie->descript.data();
+            imdb = movie->imdb.data();
+            poster = movie->imdb.data();
+        }
+
+        // === unload =====================================================
+        // Nullify/falsify movie-related pointer internal variables.
+        //
+        // Parameters:
+        //      none
+        // Returns:
+        //      void
+        // ================================================================
+        void unload()
+        {
+            name = year = rating
+            = runtime = genre
+            = director[0] = director[1]
+            = director[2] = director[3]
+            = descript = imdb = poster
+            = nullptr;
+            for (int i = 0; i < 3; ++i)
+                previous[i] = current[i] = false;
+            toggleFaveActive = toggleWatchedActive = false;
         }
 
         // === draw =======================================================
@@ -370,8 +390,12 @@ public:
             // Keep track of whether any action values change
             bool isDelta = false;
 
+            // Disable rating if movie name doesn't exist (screen unloaded)
+            if (name == nullptr)
+                GuiDisable();
+
             // Constant text fields
-            char const *poster  = "Movie poster area";
+            char const *posText = "Movie poster area";
             char const *detail  = "#010#Details";       // Paper with text
             char const *tagDir  = "DIRECTOR";
             char const *tagGen  = "GENRE";
@@ -393,7 +417,7 @@ public:
             int const lineSpace = GuiGetStyle(DEFAULT, TEXT_LINE_SPACING);
 
             // Draw the left side (poster and basic info)
-            GuiDummyRec(layout[0], poster);
+            //GuiDummyRec(layout[0], posText);
             GuiSetStyle(DEFAULT, TEXT_SIZE, fontSize * 2);
             GuiLabel(layout[1], name);
             GuiSetStyle(DEFAULT, TEXT_SIZE, fontSize);
@@ -442,6 +466,11 @@ public:
             GuiSetStyle(DEFAULT, TEXT_LINE_SPACING, lineSpace);
             GuiSetStyle(DEFAULT, TEXT_WRAP_MODE, TEXT_WRAP_NONE);
             GuiSetStyle(DEFAULT, TEXT_ALIGNMENT_VERTICAL, TEXT_ALIGN_MIDDLE);
+
+            // Same check at function exit for nonexistent movie name
+            // (we don't want to disable the entire program)
+            if (name == nullptr)
+                GuiEnable();
 
             // Check for differences and keep exclusivity for first three
             for (int i = 0; i < 3; ++i) {
@@ -500,6 +529,7 @@ public:
         char const *genre;
         char const *imdb;
         char const *descript;
+        char const *poster;
     } movie{*this};
 
     // === Account panel ==================================================
