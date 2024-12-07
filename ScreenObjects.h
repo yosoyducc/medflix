@@ -23,6 +23,8 @@
 #include "IniReader.h"
 #include "HashTable.h"
 
+#include <exception>
+
 // Include raygui/raylib as C library
 extern "C" {
     #include "raylib.h"
@@ -326,18 +328,22 @@ public:
         }
 
         // === load =======================================================
-        // For a Movie Hash node, update internal references to them.
+        // For a Movie Hash node and user account, set some internal
+        // references to reflect this movie.
         //
         // Parameters:
-        //      MovieNode *
+        //      MovieNode *, AccountManager &acct
         // Returns:
         //      void
         // ================================================================
-        void load(MovieNode const *movie)
+        void load(MovieNode const *movie, AccountManager const &acct)
         {
-            if (movie == nullptr)
+            // If null is passed or user isn't signed in
+            if (movie == nullptr || !acct.signedIn())
                 return;
 
+            // Populate pointer values with addresses of internal
+            // strings from movies database ini
             name = movie->name.data();
             year = movie->year.data();
             rating = movie->rating.data();
@@ -351,6 +357,24 @@ public:
             descript = movie->descript.data();
             imdb = movie->imdb.data();
             poster = movie->imdb.data();
+
+            // Populate toggle variables with preferences from user ini
+            try {
+                IniReader const &ini = *acct.getUserData();
+                int like = std::stoi(ini(name, "Like"));
+                int fave = std::stoi(ini(name, "Favorite"));
+                int wtch = std::stoi(ini(name, "Watched"));
+
+                switch (like) {
+                    case 2:  previous[0] = current[0] = true; break;
+                    case 1:  previous[1] = current[1] = true; break;
+                    case -1: previous[2] = current[2] = true; break;
+                }
+                if (fave) previous[3] = toggleFaveActive = true;
+                if (wtch) previous[4] = toggleWatchedActive = true;
+            } catch (std::exception const &e) {
+                TraceLog(LOG_WARNING, "No configuration for this movie for user");
+            }
         }
 
         // === unload =====================================================
