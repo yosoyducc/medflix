@@ -37,6 +37,10 @@ bool AccountManager::create(char const *u, char const *p)
     if (TextLength(u) < 3 || TextLength(p) < 5)
         return false;
 
+    // Check if the directory exists, create it if not
+    if (!DirectoryExists(USER_DB_PREFIX))
+        MakeDirectory(USER_DB_PREFIX);
+
     // Get the file name for this user by formatting the username
     // and check that this file doesn't exist by opening it for reading
     char const *uf = TextFormat(USER_DB_PREFIX "%s.ini", u);
@@ -59,16 +63,13 @@ bool AccountManager::create(char const *u, char const *p)
     // Calling the string constructor for password is necessary because
     // the string returned by EncodeDataBase64() is not 0-terminated
     IniReader user;
-    // A brand-new user will have two properties...
+    // A brand-new user will have two properties:
     user.addProperty(0, "Username", u);
     user.addProperty(0, "Password", string(pb64, pb64Sz));
-    // and five (six including global) sections.
-    user.addSection("Favorites");   // Personal favorites list
-    user.addSection("Superliked");  // Movies like these will get recommended
-    user.addSection("Liked");
-    user.addSection("Disliked");
-    user.addSection("Watched");     // Watch history
+    // Other functions in the program will manage other sections,
+    // in AccountManager we are interested only in username and password.
 
+    // Save the created user ini to disk
     bool writeStatus = user.write(uf);
 
     // Free allocated memory and return
@@ -91,7 +92,7 @@ bool AccountManager::signIn(char const *u, char const *p)
 
     // Initialize the IniReader type in this class
     user = new IniReader(uf);
-    if (user->getSectionCount() < 6 || user->getPropertyCount() < 2) {
+    if (user->getPropertyCount() < 2) {
         delete user;
         user = nullptr;
         return false;
