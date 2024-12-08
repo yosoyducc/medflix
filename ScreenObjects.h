@@ -614,6 +614,13 @@ public:
             // Including left padding for basic info
             layout[2].x = layout[1].x + layout[1].width + 24;
 
+            // Format film information as info
+            char const *fmt = TextFormat("%s  |  %s  |  %s", year, rating, runtime);
+            int fmtSz = TextLength(fmt);
+            info = new char[fmtSz + 1];
+            TextCopy(info, fmt);
+            info[fmtSz] = 0x0;      // null-termination
+
             // Populate toggle variables with preferences from user ini
             try {
                 IniReader const &ini = *acct.getUserData();
@@ -663,6 +670,11 @@ public:
                     director[i] = nullptr;
                 }
             }
+
+            // Delete memory of the basic info text
+            if (info)
+                delete[] info;
+            info = nullptr;
 
             // Reset state of button toggles to unselected
             for (int i = 0; i < 3; ++i)
@@ -872,7 +884,7 @@ public:
         // Variable text fields
         char const *name;
         Vector2     namePx;     // dimensions of movie name (width, height)
-        char const *info;
+        char       *info;           // Not const because we copy
         char const *year;
         char const *rating;
         char const *runtime;
