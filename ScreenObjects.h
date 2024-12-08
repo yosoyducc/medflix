@@ -278,9 +278,7 @@ public:
             anchor = { 160, 8 };
 
             // Panel stuff
-            panelScrollView = { 0 };
             panelScrollOffset = { 0 };
-            panelBoundsOffset = { 0 };
             refreshPressed = false;
 
             // Default boundaries
@@ -322,11 +320,22 @@ public:
             // Update button position on the x-axis
             layout[3].x      = anchor.x + layout[1].width + 24;
 
+            // Panel drawing vars
+            Rectangle view;
+            int contentHeight = faves.size() * 48;
+
             // Draw the panel backdrop
             GuiDummyRec(layout[0], nullptr);
             GuiLine(layout[1], header);
-            GuiScrollPanel(layout[2], nullptr, layout[2], &panelScrollOffset, &panelScrollView);
+            GuiScrollPanel(layout[2], nullptr, (Rectangle){ layout[2].x, layout[2].y, layout[2].width - 15, (float)contentHeight }, &panelScrollOffset, &view);
             refreshPressed = GuiButton(layout[3], button);
+
+            BeginScissorMode(view.x, view.y, view.width, view.height);
+                for (int i = 0; i < faves.size(); ++i) {
+                    GuiLabelButton((Rectangle){ anchor.x + 32, anchor.y + 40 + (i * 48) + panelScrollOffset.y, view.width - 24, 48 }, TextFormat("%s (%s)", faves[i]->name.data(), faves[i]->year.data()));
+                    GuiLine((Rectangle){ anchor.x + 24, anchor.y + 80 + (i * 48) + panelScrollOffset.y, view.width - 16, 16 }, NULL);
+                }
+            EndScissorMode();
         }
 
         // === favorites variables ========================================
@@ -336,10 +345,9 @@ public:
         Vector2 anchor;
 
         // Movies panels variables
-        Rectangle panelScrollView;
         Vector2 panelScrollOffset;
-        Vector2 panelBoundsOffset;
         bool refreshPressed;
+        std::vector<MovieNode *> faves;
 
         // Rectangle definitions
         Rectangle layout[4];
