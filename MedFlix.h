@@ -97,7 +97,7 @@ private:
     // Cosmetics
     Color background;
 
-        void fillHash(HashTable*& table) {
+void fillHash(HashTable*& table) {
         //std::cout<<"HELLOHELLOHELLO\n";
         int part = 0;
         auto &props = db.getProperties();
@@ -114,29 +114,39 @@ private:
                         letters.push_back(std::tolower(currentName[j]));
                     }
                     std::string currentWord(letters.begin(), letters.end());
-                    std::cout<<currentWord<<std::endl;
-                    //std::string currentWord = "hello";
-                    MovieNode* newMovie= table->set(currentWord,currentName,props[part].second.second,props[part+1].second.second,props[part+2].second.second,
-                        props[part+3].second.second,props[part+4].second.second,props[part+5].second.second,props[part+6].second.second,
-                        props[part+7].second.second);
-                    std::string genre = props[part+3].second.second;
-                    if(genre=="Action") {
-                        table->Action.push_back(newMovie);
-                    } else if(genre=="Drama") {
-                        table->Drama.push_back(newMovie);
-                    } else if(genre=="Sci-Fi") {
-                        table->Scifi.push_back(newMovie);
-                    } else if(genre=="Horror") {
-                        table->Horror.push_back(newMovie);
-                    } else {
-                        table->Comedy.push_back(newMovie);
+                    bool dup = false;
+                    for(auto word : words) {
+                        if(word==currentWord) {
+                            dup = true;
+                        }
                     }
+                    if(dup==false) {
+                        //std::cout<<"h\n";
+                        std::cout<<currentWord<<std::endl;
+                        MovieNode* newMovie= table->set(currentWord,currentName,props[part].second.second,props[part+1].second.second,props[part+2].second.second,
+                            props[part+3].second.second,props[part+4].second.second,props[part+5].second.second,props[part+6].second.second,
+                            props[part+7].second.second);
+                        std::string genre = props[part+3].second.second;
+                        if(genre=="Action") {
+                            table->Action.push_back(newMovie);
+                        } else if(genre=="Drama") {
+                            table->Drama.push_back(newMovie);
+                        } else if(genre=="Sci-Fi") {
+                            table->Scifi.push_back(newMovie);
+                        } else if(genre=="Horror") {
+                            table->Horror.push_back(newMovie);
+                        } else {
+                            table->Comedy.push_back(newMovie);
+                        }
+                    }
+                    words.push_back(currentWord);
                     letters.clear();
                 } else if(isalnum(currentName[j])){
                     letters.push_back(std::tolower(currentName[j]));
                 }
             }
             part+=8;
+            words.clear();
         }
     }
 };
