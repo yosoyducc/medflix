@@ -596,7 +596,7 @@ public:
                 textCount = 4;
             for (int i = 0; i < textCount; ++i) {
                 int textSz = TextLength(text[i]);
-                director[i] = (char *)MemAlloc(textSz + 1);
+                director[i] = new char[textSz + 1];
                 TextCopy(director[i], text[i]);
                 director[i][textSz] = 0x0;
             }
@@ -666,7 +666,7 @@ public:
             // Delete memory allocated for director strings
             for (int i = 0; i < 4; ++i) {
                 if (director[i]) {
-                    MemFree(director[i]);
+                    delete[] director[i];
                     director[i] = nullptr;
                 }
             }
