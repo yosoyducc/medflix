@@ -82,7 +82,7 @@ void MedFlix::update()
         programShouldClose = true;
 
     // Keyboard shortcuts to switch screens without mouse :)
-    if (acct.signedIn() && IsKeyDown(KEY_LEFT_CONTROL)) switch (GetKeyPressed()) {
+    if (acct.signedIn() && !exitPrompt && IsKeyDown(KEY_LEFT_CONTROL)) switch (GetKeyPressed()) {
         case KEY_A:
             so.sidebar.listActive = ScreenObjects::HOME;
             break;
