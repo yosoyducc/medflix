@@ -438,9 +438,15 @@ public:
             genre = movie->genre.data();
             int textCount;
             char const **text = TextSplit(movie->director.data(), ',', &textCount);
-            // We ignore textCount return value and just put four
-            for (int i = 0; i < 4; ++i)
-                director[i] = text[i];
+            // We cap textCount at four and copy strings
+            if (textCount > 4)
+                textCount = 4;
+            for (int i = 0; i < textCount; ++i) {
+                int textSz = TextLength(text[i]);
+                director[i] = (char *)MemAlloc(textSz + 1);
+                TextCopy(director[i], text[i]);
+                director[i][textSz] = 0x0;
+            }
             descript = movie->descript.data();
             imdb = movie->imdb.data();
             poster = movie->imdb.data();
@@ -484,19 +490,25 @@ public:
         // ================================================================
         void unload()
         {
+            // Nullify pointer-to-ini-values variables
             name        =
             year        =
             rating      =
             runtime     =
             genre       =
-            director[0] =
-            director[1] =
-            director[2] =
-            director[3] =
             descript    =
             imdb        =
             poster      = nullptr;
 
+            // Delete memory allocated for director strings
+            for (int i = 0; i < 4; ++i) {
+                if (director[i]) {
+                    MemFree(director[i]);
+                    director[i] = nullptr;
+                }
+            }
+
+            // Reset state of button toggles to unselected
             for (int i = 0; i < 3; ++i)
                 current[i]      = false;
             toggleFaveActive    = false;
@@ -505,6 +517,7 @@ public:
             for (int i = 0; i < 5; ++i)
                 previous[i]     = false;
 
+            // No movie name, so no movie name dimensions either
             namePx = (Vector2){ 0, 0 };
         }
 
@@ -705,7 +718,7 @@ public:
         char const *year;
         char const *rating;
         char const *runtime;
-        char const *director[4];
+        char       *director[4];    // Not const because we copy
         char const *genre;
         char const *imdb;
         char const *descript;
