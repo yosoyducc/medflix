@@ -1,0 +1,23 @@
+#
+# rgl layout text file (v4.0) - raygui layout file generated using rGuiLayout
+#
+# Number of controls:     12
+#
+# Ref. window:    r <x> <y> <width> <height>
+# Anchor info:    a <id> <name> <posx> <posy> <enabled>
+# Control info:   c <id> <type> <name> <rectangle> <anchor_id> <text>
+#
+r 0 40 -1 -1
+a 001 anchor 48 48 1
+c 000 23 backpanel 0 0 544 400 1 
+c 001 20 panel 8 88 528 304 1 
+c 002 1 group 8 16 528 376 1 #064#Filmhunter
+c 003 4 labelHint 40 40 216 32 1 Search for your next victim...
+c 004 12 entry 32 40 432 32 1 
+c 005 5 button 480 40 32 32 1 #043#
+c 006 6 result1 32 88 216 48 1 The Land Before Time (1988)
+c 007 2 div1 24 128 480 16 1 
+c 008 6 result2 32 136 216 48 1 The Last Unicorn (1982)
+c 009 2 div2 24 176 480 16 1 
+c 010 6 result3 32 184 216 48 1 The Iron Giant (1999)
+c 011 2 div3 24 224 480 16 1 
