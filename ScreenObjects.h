@@ -1039,13 +1039,17 @@ public:
             // Render the hints
             if (butHintPressed)
                 showHintBox = true;
+            // Weirdest bug happens here:
+            // If user mouse is hovering *just* right when clicking "Get hint"
+            // so as to also trigger `choice` to be 1, the program softlocks.
+            // To avoid this we move the box slightly up from center.
             if (showHintBox) {
                 GuiUnlock();
 
                 // calculate boundaries of the box
                 float hwidth  = GetScreenWidth() / 2.0f,
                       hheight = GetScreenHeight() / 2.0f;
-                Rectangle bounds = { hwidth - 200, hheight - 75, 400, 150 };
+                Rectangle bounds = { hwidth - 200, hheight - 90, 400, 150 };
                 int choice = GuiMessageBox(bounds, "#193#Hint", "Username must have at least 3 characters,\npassword must have at least 5 characters.", "I understand");
 
                 if (choice >= 0) {
