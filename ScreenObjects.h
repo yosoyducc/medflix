@@ -602,7 +602,7 @@ public:
             }
             descript = movie->descript.data();
             imdb = movie->imdb.data();
-            poster = movie->imdb.data();
+            poster = movie->poster.data();
 
             // Calculate movie name dimensions and add offset to name and basic info
             int fontSize = GuiGetStyle(DEFAULT, TEXT_SIZE);
@@ -631,6 +631,9 @@ public:
             } catch (std::exception const &e) {
                 TraceLog(LOG_WARNING, "No configuration for this movie for user");
             }
+
+            // Load the movie poster to memory
+            texture = LoadTexture(TextFormat("./poster/%s", poster));
         }
 
         // === unload =====================================================
@@ -672,6 +675,8 @@ public:
 
             // No movie name, so no movie name dimensions either
             namePx = (Vector2){ 0, 0 };
+            // And no movie poster
+            UnloadTexture(texture);
         }
 
         // === draw =======================================================
@@ -876,6 +881,9 @@ public:
         char const *imdb;
         char const *descript;
         char const *poster;
+
+        // Movie poster texture (in VRAM)
+        Texture2D texture;
     } movie{*this};
 
     // === Account panel ==================================================
