@@ -936,11 +936,15 @@ public:
             if (dropActionEditMode || showHintBox) GuiLock();
 
             char const *panelTitle  = "#137#Account Manager";
-            char const *labelSignin = dropActionActive ? "New account creation" : "Please sign in.";
+            char const *labelSignin
+                = acct.signedIn() ? "You're watching MedFlix(TM)."
+                : dropActionActive ? "New account creation" : "Please sign in.";
             char const *acctInfo    = dropActionActive ? "Account registration" : "Account info";
             char const *username    = "Username:";
             char const *password    = "Password:";
-            char const *signMeIn    = dropActionActive ? "Register me!" : "Sign me in!";
+            char const *signMeIn
+                = acct.signedIn() ? "Sign out"
+                : dropActionActive ? "Register me!" : "Sign me in!";
             char const *dropdown    = "SIGN IN;REGISTER";
             char const *labelHint   = "Get hint";
 
@@ -1007,16 +1011,30 @@ public:
             GuiLabel(layout[2], labelSignin);
             GuiGroupBox(layout[3], acctInfo);
             GuiLabel(layout[4], username);
-            if (GuiTextBox(layout[5], entryUserText, 16, entryUserEditMode))
+            if (acct.signedIn())
+                GuiLabel(layout[5], acct.getUserData()->getPropertyValue(0, 0).data());
+            else if (GuiTextBox(layout[5], entryUserText, 16, entryUserEditMode))
                 entryUserEditMode = !entryUserEditMode;
-            GuiLabel( layout[6], password);
-            if (GuiTextBox(layout[7], entryPassText, 32, entryPassEditMode))
+            GuiLabel(layout[6], password);
+            if (acct.signedIn())
+                // what, did you think I would show the password hash???
+                GuiLabel(layout[7], "******");
+            else if (GuiTextBox(layout[7], entryPassText, 32, entryPassEditMode))
                 entryPassEditMode = !entryPassEditMode;
             butSigninPressed = GuiButton(layout[8], signMeIn);
             if (showButHint)
                 butHintPressed = GuiLabelButton(layout[9], labelHint);
-            if (GuiDropdownBox(layout[1], dropdown, &dropActionActive, dropActionEditMode))
+
+            if (!acct.signedIn() && GuiDropdownBox(layout[1], dropdown, &dropActionActive, dropActionEditMode))
                 dropActionEditMode = !dropActionEditMode;
+
+            // Note to self: I don't think we need to worry about dropdown
+            // status because in order to sign in we must specify SIGN IN.
+            // So when the user signs in, we don't need to set that.
+
+            // Also known "bug": "Get hint" tip does not disappear after login
+            // if the user failed registration previously and doesn't click it.
+            // This isn't intentional, but I don't care to fix it.
 
             // Render the hints
             if (butHintPressed)
