@@ -364,9 +364,7 @@ public:
             anchor = { 160, 8 };
 
             // Initialize controls
-            panelScrollView = { 0, 0, 0, 0 };
             panelScrollOffset = { 0, 0 };
-            panelContentBounds = { 10, 10 };
             entryEditMode = false;
             entryText[0] = 0x0;
             buttonPressed = false;
@@ -390,11 +388,11 @@ public:
         // Draw the objects to the screen.
         //
         // Parameters:
-        //      none
+        //      IniReader movie database, user account
         // Returns:
         //      void
         // ================================================================
-        void draw()
+        void draw(IniReader const &db, AccountManager const &acct)
         {
             // Check if user hit cool keys
             if (IsKeyPressed(KEY_TAB))
@@ -424,10 +422,34 @@ public:
             // Search button is offset from layout[4] by 16
             layout[5].x     = layout[4].x + layout[4].width + 16;
 
+            // Variables for drawing
+            // TEMPORARY: get results from search instead...
+            Rectangle view;
+            static std::vector<std::string> const names = {
+                "the land before time",
+                "the last unicorn",
+                "the iron giant",
+                "knives out",
+                "space jam",
+                "citizen kane",
+                "city lights",
+                "oppenheimer",
+                "2001: a space odyssey",
+                "ghostbusters",
+                "the girl who leapt through time",
+                "the powerpuff girls movie",
+                "the matrix",
+                "beverly hills cop",
+                "jurassic park",
+                "jojo rabbit",
+                "pokémon: detective pikachu"
+            };
+            int contentHeight = names.size() * 48;
+
             // Render elements to the screen
             GuiDummyRec(layout[0], NULL);
-            GuiScrollPanel(layout[1], NULL, (Rectangle){ layout[1].x, layout[1].y, panelContentBounds.x, panelContentBounds.y }, &panelScrollOffset, &panelScrollView);
-            //GuiLine((Rectangle){layout[1].x, layout[1].y, layout[1].width, 0}, NULL);
+            GuiScrollPanel(layout[1], NULL, (Rectangle){ layout[1].x, layout[1].y, layout[1].width - 15, (float)contentHeight }, &panelScrollOffset, &view);
+            GuiLine((Rectangle){layout[1].x, layout[1].y, layout[1].width, 0}, NULL);
             GuiGroupBox(layout[2], groupText);
             // Only display hint if the user hasn't entered any text yet
             if (!entryText[0])
@@ -436,11 +458,17 @@ public:
                 entryEditMode = !entryEditMode;
             buttonPressed = GuiButton(layout[5], search);
 
-            // TEMPORARY: TODO: render as list inside scissor drawing
-            for (int i = 0; i < 4; ++i) {
-                GuiLabelButton((Rectangle){ anchor.x + 32, anchor.y + 88 + (i * 48), layout[4].width, 48 }, "Le Petit Dinosaure et la Vallée des merveilles (70 MYA)");
-                GuiLine((Rectangle){ anchor.x + 24, anchor.y + 128 + (i * 48), layout[4].width + 32, 16 }, NULL);
-            }
+            // TODO: get data from search results instead.
+            BeginScissorMode(view.x, view.y, view.width, view.height);
+                for (int i = 0; i < names.size(); ++i) {
+                    int s = db.findSection(names[i]);
+                    auto &n = db.getSectionName(s);
+                    int p = db.findProperty(s, "year");
+                    auto &v = db(s, p);
+                    GuiLabelButton((Rectangle){ anchor.x + 32, anchor.y + 88 + (i * 48) + panelScrollOffset.y, layout[4].width, 48 }, TextFormat("%s (%s)", n.data(), v.data()));
+                    GuiLine((Rectangle){ anchor.x + 24, anchor.y + 128 + (i * 48) + panelScrollOffset.y, layout[4].width + 32, 16 }, NULL);
+                }
+            EndScissorMode();
         }
 
         // === Search panel variables =====================================
@@ -449,9 +477,7 @@ public:
         Vector2 anchor;
 
         // Controls variables
-        Rectangle panelScrollView;
         Vector2 panelScrollOffset;
-        Vector2 panelContentBounds;
 
         bool entryEditMode;
         char entryText[128];
