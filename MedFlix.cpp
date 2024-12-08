@@ -59,6 +59,7 @@ MedFlix::MedFlix() : db("database.ini")
     so.sidebar.init();
     so.recommend.init();
     so.favorites.init();
+    so.search.init();
     so.movie.init();
     so.account.init();
 
@@ -101,32 +102,44 @@ void MedFlix::update()
 
     // If sign in button is pressed, determine which mode is
     // selected then take an appropriate action
-    if (so.account.butSigninPressed) switch (so.account.dropActionActive) {
-    case 0:     // SIGN IN mode
-        if (acct.signIn(so.account.entryUserText, so.account.entryPassText)) {
-            TraceLog(LOG_INFO, "Signed in as %s",
-                acct.getUserData()->getPropertyValue(0, 0).data());
-            // "clear" the user/pass entry buffers
-            so.account.entryUserText[0] = 0x0;
-            so.account.entryPassText[0] = 0x0;
-            // switch screen to Home
+    if (so.account.butSigninPressed) {
+        if (!acct.signedIn()) switch (so.account.dropActionActive) {
+        case 0:     // SIGN IN mode
+            if (acct.signIn(so.account.entryUserText, so.account.entryPassText)) {
+                TraceLog(LOG_INFO, "Signed in as %s",
+                    acct.getUserData()->getPropertyValue(0, 0).data());
+                // "clear" the user/pass entry buffers
+                so.account.entryUserText[0] = 0x0;
+                so.account.entryPassText[0] = 0x0;
+                // switch screen to Home
+                so.sidebar.listActive = ScreenObjects::HOME;
+            } else {
+                // TODO: set label message to account sign in fail
+                so.account.setLabelMessage(so.account.SIGN_IN_FAIL);
+            }
+            break;
+        case 1:     // REGISTER mode
+            if (AccountManager::create(so.account.entryUserText, so.account.entryPassText)) {
+                // Creation of account was success
+                so.account.setLabelMessage(so.account.REGISTRY_PASS);
+            } else {
+                // Creation was fail
+                so.account.setLabelMessage(so.account.REGISTRY_FAIL);
+                // Show username/password requirements
+                so.account.showButHint = true;
+            }
+            break;
+        } else {
+            // If this fails, that's on you.
+            if (acct.signOut())
+                so.account.setLabelMessage(so.account.SIGN_OUT_PASS);
+            else
+                so.account.setLabelMessage(so.account.SIGN_OUT_FAIL);
+
+            // Unload the movie details (we don't want to carry to next user)
+            so.movie.unload();
             so.sidebar.listActive = ScreenObjects::HOME;
-        } else {
-            // TODO: set label message to account sign in fail
-            so.account.setLabelMessage(so.account.SIGN_IN_FAIL);
         }
-        break;
-    case 1:     // REGISTER mode
-        if (AccountManager::create(so.account.entryUserText, so.account.entryPassText)) {
-            // Creation of account was success
-            so.account.setLabelMessage(so.account.REGISTRY_PASS);
-        } else {
-            // Creation was fail
-            so.account.setLabelMessage(so.account.REGISTRY_FAIL);
-            // Show username/password requirements
-            so.account.showButHint = true;
-        }
-        break;
     }
     // In either case, we want to reset the button press state
     // otherwise the program will infinitely attempt to sign us in
@@ -169,6 +182,9 @@ void MedFlix::render()
             break;
         case ScreenObjects::MY_LISTS:
             so.favorites.draw();
+            break;
+        case ScreenObjects::SEARCH:
+            so.search.draw(db, acct);
             break;
         case ScreenObjects::MOVIE_INFO:
             so.movie.draw(acct);
@@ -217,9 +233,10 @@ int MedFlix::exit()
 {
     // Sign out of account, if signed in
     acct.signOut();
+    so.movie.unload();
 
-    // uncomment to avoid the two-block leak from loading the style
-    //GuiLoadStyleDefault();
+    // Avoid the two-block memleak from loading the style
+    GuiLoadStyleDefault();
     CloseWindow();
     return exitCode;
 }
