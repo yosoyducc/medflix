@@ -345,6 +345,125 @@ public:
         Rectangle layout[4];
     } favorites{*this};
 
+    // === Search panel (Filmhunter) ======================================
+    //
+    // ====================================================================
+    struct Search {
+        ScreenObjects &p;
+
+        // === init =======================================================
+        // Initialize the search panel.
+        //
+        // Parameters:
+        //      none
+        // Returns:
+        //      void
+        // ================================================================
+        void init()
+        {
+            anchor = { 160, 8 };
+
+            // Initialize controls
+            panelScrollView = { 0, 0, 0, 0 };
+            panelScrollOffset = { 0, 0 };
+            panelContentBounds = { 10, 10 };
+            entryEditMode = false;
+            entryText[0] = 0x0;
+            buttonPressed = false;
+
+            // Initialize layout rectangles
+            // back drop panel
+            layout[0] = { anchor.x, anchor.y, 544, 400 };
+            // scroll panel
+            layout[1] = { anchor.x + 8, anchor.y + 88, 528, 304 };
+            // group outline
+            layout[2] = { anchor.x + 8, anchor.y + 16, 528, 376 };
+            // hint label
+            layout[3] = { anchor.x + 40, anchor.y + 40, 216, 32 };
+            // entry box
+            layout[4] = { anchor.x + 32, anchor.y + 40, 432, 32 };
+            // search button
+            layout[5] = { anchor.x + 480, anchor.y + 40, 32, 32 };
+        }
+
+        // === draw =======================================================
+        // Draw the objects to the screen.
+        //
+        // Parameters:
+        //      none
+        // Returns:
+        //      void
+        // ================================================================
+        void draw()
+        {
+            // Check if user hit cool keys
+            if (IsKeyPressed(KEY_TAB))
+                entryEditMode = true;
+            if (IsKeyPressed(KEY_ENTER))
+                entryEditMode = false;
+
+            char const *groupText = "#064#Filmhunter";
+            char const *menacing  = "Search for your next victim...";
+            char const *search    = "#043#";
+
+            // Update controls variables
+            int w = GetScreenWidth() - anchor.x;
+            int h = GetScreenHeight() - anchor.y;
+            // Back panel
+            layout[0].width  = w - 8;
+            layout[0].height = h - p.status.layout.height - 8;
+            // Scroll panel (precalculated, can't be bothered with dynamics)
+            layout[1].width  = w - 24;
+            layout[1].height = h - p.status.layout.height - 104;
+            // Group outline follows scroll panel
+            layout[2].width  = layout[1].width;
+            layout[2].height = layout[1].height + 72;
+            // Hint label is infinitely static.
+            // Entry box expands with screen width
+            layout[4].width = layout[2].width - layout[5].width - 64;
+            // Search button is offset from layout[4] by 16
+            layout[5].x     = layout[4].x + layout[4].width + 16;
+
+            // Render elements to the screen
+            GuiDummyRec(layout[0], NULL);
+            GuiScrollPanel(layout[1], NULL, (Rectangle){ layout[1].x, layout[1].y, panelContentBounds.x, panelContentBounds.y }, &panelScrollOffset, &panelScrollView);
+            //GuiLine((Rectangle){layout[1].x, layout[1].y, layout[1].width, 0}, NULL);
+            GuiGroupBox(layout[2], groupText);
+            // Only display hint if the user hasn't entered any text yet
+            if (!entryText[0])
+                GuiLabel(layout[3], menacing);
+            if (GuiTextBox(layout[4], entryText, 128, entryEditMode))
+                entryEditMode = !entryEditMode;
+            buttonPressed = GuiButton(layout[5], search);
+
+            // TEMPORARY: TODO: render as list inside scissor drawing
+            for (int i = 0; i < 4; ++i) {
+                GuiLabelButton((Rectangle){ anchor.x + 32, anchor.y + 88 + (i * 48), layout[4].width, 48 }, "Le Petit Dinosaure et la Vallée des merveilles (70 MYA)");
+                GuiLine((Rectangle){ anchor.x + 24, anchor.y + 128 + (i * 48), layout[4].width + 32, 16 }, NULL);
+            }
+        }
+
+        // === Search panel variables =====================================
+        // Internal variables used by search panel.
+        // ================================================================
+        Vector2 anchor;
+
+        // Controls variables
+        Rectangle panelScrollView;
+        Vector2 panelScrollOffset;
+        Vector2 panelContentBounds;
+
+        bool entryEditMode;
+        char entryText[128];
+        bool buttonPressed;
+
+        // TODO: add dynamic booleans
+        bool *selection;
+
+        // Layout rectangles
+        Rectangle layout[6];
+    } search{*this};
+
     // === Movie info panel ===============================================
     //
     // ====================================================================
@@ -649,7 +768,7 @@ public:
                 // determine if it exists.
                 int si = ini->findSection(name);
                 bool siExists = si > 0;     // don't count the global section
-                
+
                 // Determine if there's any truths among the booleans
                 // -> we need a section, otherwise we don't.
                 bool isTruth = false;
@@ -694,7 +813,7 @@ public:
         }
 
         // === Movie panel variables ======================================
-        // Internal variables used by account panel.
+        // Internal variables used by movie panel.
         // ================================================================
         Vector2 lAnchor;        // Left anchor, for poster
         Vector2 rAnchor;        // Right anchor, for details and actions
@@ -711,7 +830,7 @@ public:
         // Define layout rectangles
         Rectangle layout[27];
 
-        // Variable text fields (TODO: move to own function)
+        // Variable text fields
         char const *name;
         Vector2     namePx;     // dimensions of movie name (width, height)
         char const *info;
