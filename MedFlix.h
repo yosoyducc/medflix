@@ -96,4 +96,47 @@ private:
 
     // Cosmetics
     Color background;
+
+        void fillHash(HashTable*& table) {
+        //std::cout<<"HELLOHELLOHELLO\n";
+        int part = 0;
+        auto &props = db.getProperties();
+        auto &sects = db.getSections();
+        for(int i = 0; i< db.getSectionCount(); i++) {
+            std::vector<std::string> words;
+            std::vector<char> letters;
+            const std::string& currentName = sects[i];
+            //std::cout<<currentName<<std::endl;
+            for(int j = 0; j<currentName.length(); j++) {
+                if(currentName[j]==' ' || j==currentName.length()-1) {
+                    //std::cout << currentName[j];
+                    if(j==currentName.length()-1&&isalnum(currentName[j])) {
+                        letters.push_back(std::tolower(currentName[j]));
+                    }
+                    std::string currentWord(letters.begin(), letters.end());
+                    std::cout<<currentWord<<std::endl;
+                    //std::string currentWord = "hello";
+                    MovieNode* newMovie= table->set(currentWord,currentName,props[part].second.second,props[part+1].second.second,props[part+2].second.second,
+                        props[part+3].second.second,props[part+4].second.second,props[part+5].second.second,props[part+6].second.second,
+                        props[part+7].second.second);
+                    std::string genre = props[part+3].second.second;
+                    if(genre=="Action") {
+                        table->Action.push_back(newMovie);
+                    } else if(genre=="Drama") {
+                        table->Drama.push_back(newMovie);
+                    } else if(genre=="Sci-Fi") {
+                        table->Scifi.push_back(newMovie);
+                    } else if(genre=="Horror") {
+                        table->Horror.push_back(newMovie);
+                    } else {
+                        table->Comedy.push_back(newMovie);
+                    }
+                    letters.clear();
+                } else if(isalnum(currentName[j])){
+                    letters.push_back(std::tolower(currentName[j]));
+                }
+            }
+            part+=8;
+        }
+    }
 };
