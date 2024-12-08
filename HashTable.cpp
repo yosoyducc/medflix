@@ -96,17 +96,46 @@ const std::string &genre1,const std::string &director1,const std::string &descri
 }
 
 std::vector<MovieNode*> HashTable::search(std::string movieSearch) {
-    int index = hash(movieSearch);
-    //std::transform(movieSearch.begin(), movieSearch.end(), movieSearch.begin(), ::toupper);
-
-    MovieNode* temp = dataMap[index];
+    //const std::string& currentName = sects[i];
+    //std::cout<<currentName<<std::endl;
+    std::vector<char> letters;
+    std::vector<string> words;
     std::vector<MovieNode*> results;
-    while (temp != nullptr) {
-        //std::string aux = temp->name;
-        //std::cout<<aux<<std::endl;
-        //std::transform(aux.begin(), aux.end(), aux.begin(), ::toupper);
-        if (temp->name.find(movieSearch)!=std::string::npos) {
-            movieSearch = temp->name;
+    for(int j = 0; j<movieSearch.length(); j++) {
+        if(movieSearch[j]==' ' || j==movieSearch.length()-1) {
+            if(j==movieSearch.length()-1&&isalnum(movieSearch[j])) {
+                letters.push_back(std::tolower(movieSearch[j]));
+            }
+            std::string word(letters.begin(), letters.end());
+            words.push_back(word);
+            letters.clear();
+        } else if(isalnum(movieSearch[j])) {
+            letters.push_back(std::tolower(movieSearch[j]));
+        }
+    }
+    for(int i = 0; i<words.size(); i++) {
+        std::cout<<words[i]<<std::endl;
+    }
+    int index = hash(words[0]);
+    //std::transform(movieSearch.begin(), movieSearch.end(), movieSearch.begin(), ::toupper);
+    MovieNode* temp = dataMap[index];
+    while (temp != nullptr){
+        bool good = true;
+        std::vector<char> movieNameVec;
+        for(auto c: temp->name) {
+            if(isalnum(c)) {
+                movieNameVec.push_back(tolower(c));
+            }
+        }
+        std::string movieName(movieNameVec.begin(), movieNameVec.end());
+        for(int y = 0; y<words.size(); y++) {
+            if (movieName.find(words[y])==std::string::npos) {
+                //std::cout<<temp->name<<std::endl;
+                good = false;
+            }
+        }
+        if(good) {
+            std::cout << temp->name << std::endl;
             results.push_back(temp);
         }
         temp = temp->next;
