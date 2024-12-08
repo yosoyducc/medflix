@@ -77,35 +77,35 @@ HashTable::~HashTable()
 // Output:
 //
 // =============================================================================
-void HashTable::set(std::string hashname, const std::string &name1,const std::string &year1,const std::string &rating1,const std::string &runtime1,
-const std::string &genre1,const std::string &director1,const std::string &descript1,const std::string &imdb1,const std::string &poster1)
-{
+MovieNode* HashTable::set(std::string hashname, const std::string &name1,const std::string &year1,const std::string &rating1,const std::string &runtime1,
+const std::string &genre1,const std::string &director1,const std::string &descript1,const std::string &imdb1,const std::string &poster1) {
     int index = hash(hashname);
 
     MovieNode* newNode = new MovieNode(name1, year1,rating1,runtime1,genre1,director1,descript1,imdb1,poster1);
 
-    if (dataMap[index] == nullptr)
+    if (dataMap[index] == nullptr){
         dataMap[index] = newNode;
-    else {
+    } else {
         MovieNode* temp = dataMap[index];
         while (temp->next != nullptr)
             temp = temp->next;
 
         temp->next = newNode;
     }
+    return newNode;
 }
 
-std::vector<MovieNode*> HashTable::search(std::string &movieSearch) {
+std::vector<MovieNode*> HashTable::search(std::string movieSearch) {
     int index = hash(movieSearch);
-    std::transform(movieSearch.begin(), movieSearch.end(), movieSearch.begin(), ::toupper);
+    //std::transform(movieSearch.begin(), movieSearch.end(), movieSearch.begin(), ::toupper);
 
     MovieNode* temp = dataMap[index];
     std::vector<MovieNode*> results;
-
     while (temp != nullptr) {
-        std::string aux = temp->name;
-        std::transform(aux.begin(), aux.end(), aux.begin(), ::toupper);
-        if (aux == movieSearch) {
+        //std::string aux = temp->name;
+        //std::cout<<aux<<std::endl;
+        //std::transform(aux.begin(), aux.end(), aux.begin(), ::toupper);
+        if (temp->name.find(movieSearch)!=std::string::npos) {
             movieSearch = temp->name;
             results.push_back(temp);
         }
@@ -114,14 +114,117 @@ std::vector<MovieNode*> HashTable::search(std::string &movieSearch) {
     return results;
 }
 
-//this should only be called when the program
-//starts and when a user adds something
-//or removes something from liked or watched
-void HashTable::recommend() {
-    //string genres[5];
-    for(int i = 0; i<liked.size();i++) {
-
+std::vector<MovieNode*> HashTable::recommend(AccountManager& accountReader, IniReader const &db) {
+    auto user = accountReader.getUserData();
+    //0=Action
+    //1=Horror
+    //2=Scifi
+    //3=Comedy
+    //4=Drama
+    std::vector<std::vector<MovieNode*>> userGenres = {Action,Horror,Scifi,Comedy,Drama};
+    std::vector<MovieNode*> results;
+    std::vector<int>recGenres = {0,1,2,3,4};
+    std::random_device rd;
+    std::default_random_engine rng(rd());
+    //shuffles first because it's likely faster than picking a random number each time
+    for (auto& genre : userGenres) {
+        std::shuffle(genre.begin(), genre.end(), rng);
     }
+    for (int i = 0; i < user->getSectionCount(); ++i) {
+        //db grab genre[
+        //add 1 of each
+        std::string genre = db(user->getSectionName(i),"Genre");
+        if(genre == "Action") {
+            if(user->getPropertyValue(i,0)=="2") {
+                std::cout<<user->getSectionName(i)<<std::endl;
+                recGenres.push_back(0);
+                recGenres.push_back(0);
+                recGenres.push_back(0);
+            }
+            if(user->getPropertyValue(i,2)=="1") {
+                recGenres.push_back(0);
+                recGenres.push_back(0);
+            }
+        } else if (genre == "Horror") {
+            if(user->getPropertyValue(i,0)=="2") {
+                recGenres.push_back(1);
+                recGenres.push_back(1);
+                recGenres.push_back(1);
+            }
+            if(user->getPropertyValue(i,2)=="1") {
+                recGenres.push_back(1);
+                recGenres.push_back(1);
+            }
+        } else if (genre == "Sci-Fi") {
+            if(user->getPropertyValue(i,0)=="2") {
+                recGenres.push_back(2);
+                recGenres.push_back(2);
+                recGenres.push_back(2);
+            }
+            if(user->getPropertyValue(i,2)=="1") {
+                recGenres.push_back(2);
+                recGenres.push_back(2);
+            }
+        } else if (genre == "Comedy") {
+            if(user->getPropertyValue(i,0)=="2") {
+                recGenres.push_back(3);
+                recGenres.push_back(3);
+                recGenres.push_back(3);
+            }
+            if(user->getPropertyValue(i,2)=="1") {
+                recGenres.push_back(3);
+                recGenres.push_back(3);
+            }
+        } else {
+            if(user->getPropertyValue(i,0)=="2") {
+                recGenres.push_back(4);
+                recGenres.push_back(4);
+                recGenres.push_back(4);
+            }
+            if(user->getPropertyValue(i,2)=="1") {
+                recGenres.push_back(4);
+                recGenres.push_back(4);
+            }
+        }
+    }
+    for(int e = 0; e<recGenres.size(); e++) {
+        std::cout<<recGenres[e];
+    }
+    std::cout<<std::endl;
+    srand ( time(NULL) );
+    int size = db.getSectionCount();
+    while(size>=0) {
+        int movie  = recGenres[rand() % (recGenres.size()-1)];
+        results.push_back(userGenres[movie].back());
+        userGenres[movie].pop_back();
+        std::cout<<movie;
+        if(userGenres[movie].empty()) {
+            for(int k = 0; k<recGenres.size(); ++k) {
+                if(recGenres[k] == movie) {
+                    userGenres[movie].erase(userGenres[movie].begin() + k);
+                }
+            }
+        }
+        size--;
+        /*if(movie==0) {
+            results.push_back(userGenres[0].back());
+            userGenres[0].pop_back();
+        } else if(movie==1) {
+
+        } else if(movie==2) {
+
+        } else if(movie==3) {
+
+        } else if(movie==4) {
+
+        }*/
+    }
+    return results;
+    //randomNumber = rand() % 4 + 0;
+    //move the fill has to medflix.cpp in private
+    //called by medflix constructor
+    //add alphanum filter
+    //lowercase each character in fill hash
 }
 
 
