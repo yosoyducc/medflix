@@ -262,6 +262,13 @@ public:
                     GuiLine((Rectangle){ anchor.x + 24, anchor.y + 80 + (i * 48) + panelScrollOffset.y, view.width - 16, 16 }, NULL);
                 }
             EndScissorMode();
+
+            // Load movie info and switch screens if user clicked label
+            if (labelIdx > -1) {
+                p.movie.unload();
+                p.movie.load(recommended[labelIdx], acct);
+                p.sidebar.listActive = ScreenObjects::MOVIE_INFO;
+            }
         }
 
         // === recommend variables ========================================
