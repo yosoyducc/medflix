@@ -375,6 +375,7 @@ public:
             panelScrollOffset = { 0, 0 };
             entryEditMode = false;
             entryText[0] = 0x0;
+            lastTextSize = 0;
             buttonPressed = false;
 
             // Initialize layout rectangles
@@ -400,7 +401,7 @@ public:
         // Returns:
         //      void
         // ================================================================
-        void draw(IniReader const &db, AccountManager const &acct)
+        void draw(IniReader const &db, AccountManager const &acct, HashTable const &ht)
         {
             // Check if user hit cool keys
             if (IsKeyPressed(KEY_TAB))
@@ -433,26 +434,17 @@ public:
             // Variables for drawing
             // TEMPORARY: get results from search instead...
             Rectangle view;
-            static std::vector<std::string> const names = {
-                "the land before time",
-                "the last unicorn",
-                "the iron giant",
-                "knives out",
-                "space jam",
-                "citizen kane",
-                "city lights",
-                "oppenheimer",
-                "2001: a space odyssey",
-                "ghostbusters",
-                "the girl who leapt through time",
-                "the powerpuff girls movie",
-                "the matrix",
-                "beverly hills cop",
-                "jurassic park",
-                "jojo rabbit",
-                "pokémon: detective pikachu"
-            };
-            int contentHeight = names.size() * 48;
+
+            // Get new text size if there was a change in the buffer
+            // Unfortunately we have to do this before rendering because
+            // GuiScrollPanel depends on contentHeight which deps on this
+            int newTextSize = TextLength(entryText);
+            if (newTextSize != lastTextSize) {
+                results = ht.search(entryText);
+                lastTextSize = newTextSize;
+                TraceLog(LOG_INFO, "%d %d %s", results.size(), lastTextSize, entryText);
+            }
+            int contentHeight = results.size() * 48;
 
             // Render elements to the screen
             GuiDummyRec(layout[0], NULL);
@@ -468,12 +460,8 @@ public:
 
             // TODO: get data from search results instead.
             BeginScissorMode(view.x, view.y, view.width, view.height);
-                for (int i = 0; i < names.size(); ++i) {
-                    int s = db.findSection(names[i]);
-                    auto &n = db.getSectionName(s);
-                    int p = db.findProperty(s, "year");
-                    auto &v = db(s, p);
-                    GuiLabelButton((Rectangle){ anchor.x + 32, anchor.y + 88 + (i * 48) + panelScrollOffset.y, layout[4].width, 48 }, TextFormat("%s (%s)", n.data(), v.data()));
+                for (int i = 0; i < results.size(); ++i) {
+                    GuiLabelButton((Rectangle){ anchor.x + 32, anchor.y + 88 + (i * 48) + panelScrollOffset.y, layout[4].width, 48 }, TextFormat("%s (%s)", results[i]->name.data(), results[i]->year.data()));
                     GuiLine((Rectangle){ anchor.x + 24, anchor.y + 128 + (i * 48) + panelScrollOffset.y, layout[4].width + 32, 16 }, NULL);
                 }
             EndScissorMode();
@@ -486,13 +474,15 @@ public:
 
         // Controls variables
         Vector2 panelScrollOffset;
+        std::vector<MovieNode *> results;
 
         bool entryEditMode;
         char entryText[128];
+        int lastTextSize;
         bool buttonPressed;
 
-        // TODO: add dynamic booleans
-        bool *selection;
+        // Selection of properties
+        //bool *selection;
 
         // Layout rectangles
         Rectangle layout[6];
