@@ -44,7 +44,7 @@ MovieNode::MovieNode(string const &n, string const &y, string const &ra,
 // Output:
 // the index
 // =============================================================================
-int HashTable::hash(string const &key)
+int HashTable::hash(string const &key) const
 {
     int hash{};
     for (int i = 0; i < key.length(); ++i) {
@@ -101,7 +101,7 @@ MovieNode* HashTable::set(string const &hashname,  string const &name1,
     return newNode;
 }
 
-std::vector<MovieNode *> HashTable::search(string const &movieSearch) {
+std::vector<MovieNode *> HashTable::search(string const &movieSearch) const {
     //const string& currentName = sects[i];
     //std::cout<<currentName<<std::endl;
     std::vector<char> letters;
@@ -149,7 +149,7 @@ std::vector<MovieNode *> HashTable::search(string const &movieSearch) {
     return results;
 }
 
-std::vector<MovieNode *> HashTable::recommend(AccountManager const &accountReader, IniReader const &db) {
+std::vector<MovieNode *> HashTable::recommend(AccountManager const &accountReader, IniReader const &db) const {
     auto user = accountReader.getUserData();
     //0=Action
     //1=Horror

@@ -50,7 +50,7 @@ class HashTable {
 private:
     static const int SIZE = 1453;
     MovieNode *dataMap[SIZE] = { 0 };
-    int hash(std::string const &key);
+    int hash(std::string const &key) const;
 public:
     std::vector<MovieNode*> Action;
     std::vector<MovieNode*> Comedy;
@@ -90,8 +90,8 @@ public:
 
     // check if id already registered
     //bool check(int id, std::string &teacher, std::string &course);
-    std::vector<MovieNode *> search(std::string const &movieSearch);
+    std::vector<MovieNode *> search(std::string const &movieSearch) const;
 
-    std::vector<MovieNode *> recommend(AccountManager const &accountReader, IniReader const &db);
+    std::vector<MovieNode *> recommend(AccountManager const &accountReader, IniReader const &db) const;
 };
 
