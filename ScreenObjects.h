@@ -711,7 +711,7 @@ public:
                 GuiDisable();
 
             // Constant text fields
-            char const *posText = "Movie poster area";
+            //char const *posText = "Movie poster area";
             char const *detail  = "#010#Details";       // Paper with text
             char const *tagDir  = "DIRECTOR";
             char const *tagGen  = "GENRE";
@@ -733,12 +733,14 @@ public:
             int const lineSpace = GuiGetStyle(DEFAULT, TEXT_LINE_SPACING);
 
             // Draw the left side (poster and basic info)
+            Vector2 position = { layout[0].x + (int)(layout[0].width / 2 - texture.width / 2.0f), layout[0].y };
+            DrawTextureEx(texture, position, 0.0f, 1.0f, WHITE);
             //GuiDummyRec(layout[0], posText);
             GuiSetStyle(DEFAULT, TEXT_SIZE, fontSize * 2);
             GuiLabel(layout[1], name);
             GuiSetStyle(DEFAULT, TEXT_SIZE, fontSize);
             GuiLabel(layout[2], info);
-            GuiLine(layout[3], NULL);
+            //GuiLine(layout[3], NULL);
             // Draw the right side (everything else)
             GuiGroupBox(layout[4], detail);
             GuiLabel(layout[5], tagDir);
