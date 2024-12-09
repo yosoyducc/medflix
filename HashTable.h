@@ -1,4 +1,4 @@
-// Attached: lab#12
+// Attached: Lab #13
 // File: HashTable.h
 // =============================================================================
 //
@@ -7,10 +7,9 @@
 // Instructor: Med Mogasemi
 //
 // =============================================================================
-// Program: Student Reigistration System(lab#12)
+// Program: MedFlix (Movie tracking system) (lab #13)
 // =============================================================================
-// Description:
-// declarations for PrintMenu class
+// Hashmap class and MovieNode struct declaration.
 // =============================================================================
 // =============================================================================
 
