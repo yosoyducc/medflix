@@ -230,20 +230,23 @@ std::vector<MovieNode *> HashTable::recommend(AccountManager const &accountReade
         std::cout<<recGenres[e];
     }*/
     //std::cout<<std::endl;
-    srand(time(NULL) );
-    int size = 50;//db.getSectionCount();
+    srand(time(NULL));
+    int size = 50;
     while(size>=0) {
-        int movie  = recGenres[rand() % (recGenres.size()-1)];
-        results.push_back(userGenres[movie].back());
-        userGenres[movie].pop_back();
+        std::cout << size << std::endl;
+        int movie = recGenres[rand() % recGenres.size()];
+        if (!userGenres[movie].empty()) {
+            results.push_back(userGenres[movie].back());
+            userGenres[movie].pop_back();
+        }
         //std::cout<<movie;
-        if(userGenres[movie].empty()) {
+        /*if(userGenres[movie].empty()) {
             for(int k = 0; k<recGenres.size(); ++k) {
                 if(recGenres[k] == movie) {
                     userGenres[movie].erase(userGenres[movie].begin() + k);
                 }
             }
-        }
+        }*/
         size--;
         /*if(movie==0) {
             results.push_back(userGenres[0].back());
