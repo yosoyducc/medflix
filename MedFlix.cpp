@@ -114,6 +114,11 @@ void MedFlix::update()
                 // "clear" the user/pass entry buffers
                 so.account.entryUserText[0] = 0x0;
                 so.account.entryPassText[0] = 0x0;
+
+                // Set program to immediately populate recommended
+                // and favorites on user entry
+                so.favorites.refreshPressed = true;
+
                 // switch screen to Home
                 so.sidebar.listActive = ScreenObjects::HOME;
             } else {
@@ -140,6 +145,7 @@ void MedFlix::update()
 
             // Unload the movie details (we don't want to carry to next user)
             so.movie.unload();
+            so.favorites.faves.clear();
             so.sidebar.listActive = ScreenObjects::HOME;
         }
     }
@@ -183,7 +189,7 @@ void MedFlix::render()
             so.recommend.draw();
             break;
         case ScreenObjects::MY_LISTS:
-            so.favorites.draw();
+            so.favorites.draw(acct, ht);
             break;
         case ScreenObjects::SEARCH:
             so.search.draw(db, acct, ht);

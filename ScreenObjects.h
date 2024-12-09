@@ -300,7 +300,7 @@ public:
         // Returns:
         //      void
         // ================================================================
-        void draw()
+        void draw(AccountManager const &acct, HashTable const &ht)
         {
             char const *header = "#186#Favorites";
             char const *button = "#211#";
@@ -319,6 +319,21 @@ public:
             layout[2].height = h - layout[1].height - p.status.layout.height - 32;
             // Update button position on the x-axis
             layout[3].x      = anchor.x + layout[1].width + 24;
+
+            // Update the local favorites list
+            if (refreshPressed) {
+                faves.clear();
+                IniReader const *user = acct.getUserData();
+                // Start at first section, not global
+                for (int i = 1; i < user->getSectionCount(); ++i) {
+                    // Check if this movie is liked
+                    if ((*user)(i, 1) == "1") {
+                        // Ignore everything but the first result.
+                        MovieNode *ret = ht.search(user->getSectionName(i))[0];
+                        faves.push_back(ret);
+                    }
+                }
+            }
 
             // Panel drawing vars
             Rectangle view;
