@@ -191,9 +191,7 @@ public:
             anchor = { 160, 8 };
 
             // Panel stuff
-            panelScrollView = { 0 };
             panelScrollOffset = { 0 };
-            panelBoundsOffset = { 0 };
             refreshPressed = false;
 
             // Default boundaries
@@ -211,11 +209,11 @@ public:
         // Draw the recommended panel to the screen.
         //
         // Parameters:
-        //      none
+        //      movies database, account, hash table
         // Returns:
         //      void
         // ================================================================
-        void draw()
+        void draw(IniReader const &db, AccountManager const &acct, HashTable const &ht)
         {
             char const *header = "#157#Recommended";
             char const *button = "#211#";
@@ -235,11 +233,35 @@ public:
             // Update button position on the x-axis
             layout[3].x      = anchor.x + layout[1].width + 24;
 
+            // Update the local recommended list
+            if (refreshPressed) {
+                recommended.clear();
+                recommended = ht.recommend(acct, db);
+            }
+
+            // Panel drawing vars
+            Rectangle view;
+            int height = recommended.size();
+            int contentHeight = recommended.size() * 48;
+
             // Draw the panel backdrop
             GuiDummyRec(layout[0], nullptr);
             GuiLine(layout[1], header);
-            GuiScrollPanel(layout[2], nullptr, layout[2], &panelScrollOffset, &panelScrollView);
+            GuiScrollPanel(layout[2], nullptr, (Rectangle){ layout[2].x, layout[2].y, layout[2].width - 15, (float)contentHeight }, &panelScrollOffset, &view);
             refreshPressed = GuiButton(layout[3], button);
+
+            // Get which label the user clicked on
+            int labelIdx = -1;
+            BeginScissorMode(view.x, view.y, view.width, view.height);
+                for (int i = 0; i < recommended.size(); ++i) {
+                    if (GuiLabelButton((Rectangle){ anchor.x + 32, anchor.y + 40 + (i * 48) + panelScrollOffset.y, view.width - 24, 48 }, TextFormat("%s (%s, %s)", recommended[i]->name.data(), recommended[i]->year.data(), recommended[i]->genre.data()))) {
+                        Vector2 mouse = GetMousePosition();
+                        if (CheckCollisionPointRec(mouse, view))
+                            labelIdx = i;
+                    }
+                    GuiLine((Rectangle){ anchor.x + 24, anchor.y + 80 + (i * 48) + panelScrollOffset.y, view.width - 16, 16 }, NULL);
+                }
+            EndScissorMode();
         }
 
         // === recommend variables ========================================
@@ -248,11 +270,10 @@ public:
         // Anchor for the recommended panel
         Vector2 anchor;
 
-        // Movies panels variables
-        Rectangle panelScrollView;
+        // Recommended panel variables
         Vector2 panelScrollOffset;
-        Vector2 panelBoundsOffset;
         bool refreshPressed;
+        std::vector<MovieNode *> recommended;
 
         // Rectangle definitions
         Rectangle layout[4];

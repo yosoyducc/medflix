@@ -117,6 +117,7 @@ void MedFlix::update()
 
                 // Set program to immediately populate recommended
                 // and favorites on user entry
+                so.recommend.refreshPressed = true;
                 so.favorites.refreshPressed = true;
 
                 // switch screen to Home
@@ -186,7 +187,7 @@ void MedFlix::render()
         // Render the main surface based on what tab is selected
         switch (listActiveTrue) {
         case ScreenObjects::HOME:
-            so.recommend.draw();
+            so.recommend.draw(db, acct, ht);
             break;
         case ScreenObjects::MY_LISTS:
             so.favorites.draw(acct, ht);
