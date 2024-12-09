@@ -13,7 +13,10 @@ for Lab 13. It is written for Med Mogasemi's CS 1D class at Saddleback.
 
 Here's just some of the awesome features:
 
-* An exit text box prompt (lol)
+* Recommended movies
+* Favorites
+* Search for movies (by name)
+* Account management
 
 Please see the [assignment details](./ASSIGNMENT.md) for information.
 
