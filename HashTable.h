@@ -49,7 +49,7 @@ struct MovieNode {
 class HashTable {
 private:
     static const int SIZE = 1453;
-    MovieNode* dataMap[SIZE];
+    MovieNode *dataMap[SIZE] = { 0 };
     int hash(std::string const &key);
 public:
     std::vector<MovieNode*> Action;
