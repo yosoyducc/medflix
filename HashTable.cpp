@@ -242,6 +242,7 @@ std::vector<MovieNode *> HashTable::recommend(AccountManager const &accountReade
             results.push_back(userGenres[movie].back());
             userGenres[movie].pop_back();
         }
+        --size;
     }
     return results;
 }
