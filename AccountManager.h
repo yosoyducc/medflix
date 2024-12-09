@@ -89,13 +89,4 @@ public:
 
 private:
     IniReader *user;        // Account information (null if signed out)
-
-    enum MovieProperties {
-        GLOBL = 0,  // global (user name and password hash)
-        FAVES,
-        SUPER,      // superliked
-        LIKED,
-        DISLK,      // disliked
-        WTCHD,      // watched
-    };
 };
