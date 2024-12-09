@@ -296,7 +296,7 @@ public:
         // Draw the favorites panel to the screen.
         //
         // Parameters:
-        //      none
+        //      AccountManager, HashTable
         // Returns:
         //      void
         // ================================================================
@@ -412,11 +412,11 @@ public:
         // Draw the objects to the screen.
         //
         // Parameters:
-        //      IniReader movie database, user account
+        //      User account, HashTable
         // Returns:
         //      void
         // ================================================================
-        void draw(IniReader const &db, AccountManager const &acct, HashTable const &ht)
+        void draw(AccountManager const &acct, HashTable const &ht)
         {
             // Check if user hit cool keys
             if (IsKeyPressed(KEY_TAB))

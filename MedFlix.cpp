@@ -192,7 +192,7 @@ void MedFlix::render()
             so.favorites.draw(acct, ht);
             break;
         case ScreenObjects::SEARCH:
-            so.search.draw(db, acct, ht);
+            so.search.draw(acct, ht);
             break;
         case ScreenObjects::MOVIE_INFO:
             so.movie.draw(acct);
