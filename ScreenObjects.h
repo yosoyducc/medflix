@@ -345,12 +345,25 @@ public:
             GuiScrollPanel(layout[2], nullptr, (Rectangle){ layout[2].x, layout[2].y, layout[2].width - 15, (float)contentHeight }, &panelScrollOffset, &view);
             refreshPressed = GuiButton(layout[3], button);
 
+            // Get which label the user clicked on, if any
+            int labelIdx = -1;
             BeginScissorMode(view.x, view.y, view.width, view.height);
                 for (int i = 0; i < faves.size(); ++i) {
-                    GuiLabelButton((Rectangle){ anchor.x + 32, anchor.y + 40 + (i * 48) + panelScrollOffset.y, view.width - 24, 48 }, TextFormat("%s (%s)", faves[i]->name.data(), faves[i]->year.data()));
+                    if (GuiLabelButton((Rectangle){ anchor.x + 32, anchor.y + 40 + (i * 48) + panelScrollOffset.y, view.width - 24, 48 }, TextFormat("%s (%s)", faves[i]->name.data(), faves[i]->year.data()))) {
+                        // Determine if mouse is inside area when clicked
+                        Vector2 mouse = GetMousePosition();
+                        if (CheckCollisionPointRec(mouse, view))
+                            labelIdx = i;
+                    }
                     GuiLine((Rectangle){ anchor.x + 24, anchor.y + 80 + (i * 48) + panelScrollOffset.y, view.width - 16, 16 }, NULL);
                 }
             EndScissorMode();
+
+            if (labelIdx > -1) {
+                p.movie.unload();
+                p.movie.load(faves[labelIdx], acct);
+                p.sidebar.listActive = ScreenObjects::MOVIE_INFO;
+            }
         }
 
         // === favorites variables ========================================
