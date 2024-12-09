@@ -254,6 +254,7 @@ void MedFlix::fillHash() {
         std::vector<std::string> words;
         std::vector<char> letters;
         const std::string& currentName = sects[i];
+        int once = 1;
         //std::cout<<currentName<<std::endl;
         for(int j = 0; j<currentName.length(); j++) {
             if(currentName[j]==' ' || j==currentName.length()-1) {
@@ -273,16 +274,19 @@ void MedFlix::fillHash() {
                         props[part+3].second.second,props[part+4].second.second,props[part+5].second.second,props[part+6].second.second,
                         props[part+7].second.second);
                     std::string genre = props[part+3].second.second;
-                    if(genre=="Action") {
-                        ht.Action.push_back(newMovie);
-                    } else if(genre=="Drama") {
-                        ht.Drama.push_back(newMovie);
-                    } else if(genre=="Sci-Fi") {
-                        ht.Scifi.push_back(newMovie);
-                    } else if(genre=="Horror") {
-                        ht.Horror.push_back(newMovie);
-                    } else {
-                        ht.Comedy.push_back(newMovie);
+                    if(once==1){
+                        if(genre=="Action") {
+                            ht.Action.push_back(newMovie);
+                        } else if(genre=="Drama") {
+                            ht.Drama.push_back(newMovie);
+                        } else if(genre=="Sci-Fi") {
+                            ht.Scifi.push_back(newMovie);
+                        } else if(genre=="Horror") {
+                            ht.Horror.push_back(newMovie);
+                        } else {
+                            ht.Comedy.push_back(newMovie);
+                        }
+                        once--;
                     }
                 }
                 words.push_back(currentWord);
