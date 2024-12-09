@@ -37,7 +37,7 @@ struct MovieNode {
     std::string const &descript;
     std::string const &imdb;
     std::string const &poster;
-    MovieNode* next;
+    MovieNode *next;
 
     MovieNode(std::string const &, std::string const &, std::string const &,
               std::string const &, std::string const &, std::string const &,
@@ -59,8 +59,10 @@ public:
     std::vector<MovieNode*> Horror;
     ~HashTable();
     //adds a teacher and their information to the linked list
-    MovieNode* set(std::string hashname, const std::string &name1,const std::string &year1,const std::string &rating1,const std::string &runtime1,
-const std::string &genre1,const std::string &director1,const std::string &descript1,const std::string &imdb1,const std::string &poster1);
+    MovieNode *set(std::string const &hashname, std::string const &,
+                   std::string const &, std::string const &, std::string const &,
+                   std::string const &, std::string const &, std::string const &,
+                   std::string const &, std::string const &);
 
     // For a giveMovieNode*n professor name, get courses
     //prof_data const *getCourses(std::string &name);
@@ -88,8 +90,8 @@ const std::string &genre1,const std::string &director1,const std::string &descri
 
     // check if id already registered
     //bool check(int id, std::string &teacher, std::string &course);
-    std::vector<MovieNode*> search(std::string movieSearch);
+    std::vector<MovieNode *> search(std::string const &movieSearch);
 
-    std::vector<MovieNode*> recommend(AccountManager& accountReader, IniReader const &db);
+    std::vector<MovieNode *> recommend(AccountManager const &accountReader, IniReader const &db);
 };
 

@@ -23,8 +23,11 @@ using std::string;
 
 /**** Node Class ****/
 
-MovieNode::MovieNode(string const &n, string const &y, string const &ra, string const &ru, string const &g, string const &dr, string const &de, string const &i, string const &p)
-: name{n}, year{y}, rating{ra}, runtime{ru}, genre{g}, director{dr}, descript{de}, imdb{i}, poster{p}, next{nullptr}
+MovieNode::MovieNode(string const &n, string const &y, string const &ra,
+                     string const &ru, string const &g, string const &dr,
+                     string const &de, string const &i, string const &p)
+: name{n}, year{y}, rating{ra}, runtime{ru}, genre{g},
+  director{dr}, descript{de}, imdb{i}, poster{p}, next{nullptr}
 { }
 
 // Below code does NOT work yet.
@@ -41,7 +44,7 @@ MovieNode::MovieNode(string const &n, string const &y, string const &ra, string 
 // Output:
 // the index
 // =============================================================================
-int HashTable::hash(std::string const &key)
+int HashTable::hash(string const &key)
 {
     int hash{};
     for (int i = 0; i < key.length(); ++i) {
@@ -77,8 +80,11 @@ HashTable::~HashTable()
 // Output:
 //
 // =============================================================================
-MovieNode* HashTable::set(std::string hashname, const std::string &name1,const std::string &year1,const std::string &rating1,const std::string &runtime1,
-const std::string &genre1,const std::string &director1,const std::string &descript1,const std::string &imdb1,const std::string &poster1) {
+MovieNode* HashTable::set(string const &hashname,  string const &name1,
+                          string const &year1,     string const &rating1,
+                          string const &runtime1,  string const &genre1,
+                          string const &director1, string const &descript1,
+                          string const &imdb1,     string const &poster1) {
     int index = hash(hashname);
 
     MovieNode* newNode = new MovieNode(name1, year1,rating1,runtime1,genre1,director1,descript1,imdb1,poster1);
@@ -95,8 +101,8 @@ const std::string &genre1,const std::string &director1,const std::string &descri
     return newNode;
 }
 
-std::vector<MovieNode*> HashTable::search(std::string movieSearch) {
-    //const std::string& currentName = sects[i];
+std::vector<MovieNode *> HashTable::search(string const &movieSearch) {
+    //const string& currentName = sects[i];
     //std::cout<<currentName<<std::endl;
     std::vector<char> letters;
     std::vector<string> words;
@@ -106,7 +112,7 @@ std::vector<MovieNode*> HashTable::search(std::string movieSearch) {
             if(j==movieSearch.length()-1&&isalnum(movieSearch[j])) {
                 letters.push_back(std::tolower(movieSearch[j]));
             }
-            std::string word(letters.begin(), letters.end());
+            string word(letters.begin(), letters.end());
             words.push_back(word);
             letters.clear();
         } else if(isalnum(movieSearch[j])) {
@@ -127,9 +133,9 @@ std::vector<MovieNode*> HashTable::search(std::string movieSearch) {
                 movieNameVec.push_back(tolower(c));
             }
         }
-        std::string movieName(movieNameVec.begin(), movieNameVec.end());
+        string movieName(movieNameVec.begin(), movieNameVec.end());
         for(int y = 0; y<words.size(); y++) {
-            if (movieName.find(words[y])==std::string::npos) {
+            if (movieName.find(words[y])==string::npos) {
                 //std::cout<<temp->name<<std::endl;
                 good = false;
             }
@@ -143,7 +149,7 @@ std::vector<MovieNode*> HashTable::search(std::string movieSearch) {
     return results;
 }
 
-std::vector<MovieNode*> HashTable::recommend(AccountManager& accountReader, IniReader const &db) {
+std::vector<MovieNode *> HashTable::recommend(AccountManager const &accountReader, IniReader const &db) {
     auto user = accountReader.getUserData();
     //0=Action
     //1=Horror
