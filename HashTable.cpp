@@ -113,9 +113,9 @@ std::vector<MovieNode*> HashTable::search(std::string movieSearch) {
             letters.push_back(std::tolower(movieSearch[j]));
         }
     }
-    for(int i = 0; i<words.size(); i++) {
+    /*for(int i = 0; i<words.size(); i++) {
         std::cout<<words[i]<<std::endl;
-    }
+    }*/
     int index = hash(words[0]);
     //std::transform(movieSearch.begin(), movieSearch.end(), movieSearch.begin(), ::toupper);
     MovieNode* temp = dataMap[index];
@@ -135,7 +135,7 @@ std::vector<MovieNode*> HashTable::search(std::string movieSearch) {
             }
         }
         if(good) {
-            std::cout << temp->name << std::endl;
+            //std::cout << temp->name << std::endl;
             results.push_back(temp);
         }
         temp = temp->next;
@@ -159,13 +159,13 @@ std::vector<MovieNode*> HashTable::recommend(AccountManager& accountReader, IniR
     for (auto& genre : userGenres) {
         std::shuffle(genre.begin(), genre.end(), rng);
     }
-    for (int i = 0; i < user->getSectionCount(); ++i) {
+    for (int i = 1; i < user->getSectionCount(); ++i) {
         //db grab genre[
         //add 1 of each
         std::string genre = db(user->getSectionName(i),"Genre");
         if(genre == "Action") {
             if(user->getPropertyValue(i,0)=="2") {
-                std::cout<<user->getSectionName(i)<<std::endl;
+                //std::cout<<user->getSectionName(i)<<std::endl;
                 recGenres.push_back(0);
                 recGenres.push_back(0);
                 recGenres.push_back(0);
@@ -216,17 +216,17 @@ std::vector<MovieNode*> HashTable::recommend(AccountManager& accountReader, IniR
             }
         }
     }
-    for(int e = 0; e<recGenres.size(); e++) {
+    /*for(int e = 0; e<recGenres.size(); e++) {
         std::cout<<recGenres[e];
-    }
-    std::cout<<std::endl;
-    srand ( time(NULL) );
-    int size = db.getSectionCount();
+    }*/
+    //std::cout<<std::endl;
+    srand(time(NULL) );
+    int size = 50;//db.getSectionCount();
     while(size>=0) {
         int movie  = recGenres[rand() % (recGenres.size()-1)];
         results.push_back(userGenres[movie].back());
         userGenres[movie].pop_back();
-        std::cout<<movie;
+        //std::cout<<movie;
         if(userGenres[movie].empty()) {
             for(int k = 0; k<recGenres.size(); ++k) {
                 if(recGenres[k] == movie) {
