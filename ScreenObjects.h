@@ -442,7 +442,6 @@ public:
             if (newTextSize != lastTextSize) {
                 results = ht.search(entryText);
                 lastTextSize = newTextSize;
-                TraceLog(LOG_INFO, "%d %d %s", results.size(), lastTextSize, entryText);
             }
             int contentHeight = results.size() * 48;
 
@@ -458,13 +457,30 @@ public:
                 entryEditMode = !entryEditMode;
             buttonPressed = GuiButton(layout[5], search);
 
-            // TODO: get data from search results instead.
+            // Get which label was pressed within the scroll panel bounds
+            int labelIdx = -1;
             BeginScissorMode(view.x, view.y, view.width, view.height);
                 for (int i = 0; i < results.size(); ++i) {
-                    GuiLabelButton((Rectangle){ anchor.x + 32, anchor.y + 88 + (i * 48) + panelScrollOffset.y, layout[4].width, 48 }, TextFormat("%s (%s)", results[i]->name.data(), results[i]->year.data()));
+                    if (GuiLabelButton((Rectangle){ anchor.x + 32, anchor.y + 88 + (i * 48) + panelScrollOffset.y, layout[4].width, 48 }, TextFormat("%s (%s)", results[i]->name.data(), results[i]->year.data()))) {
+                        // determine if mouse is inside the scissor area when clicked
+                        Vector2 mouse = GetMousePosition();
+                        if (CheckCollisionPointRec(mouse, view))
+                            labelIdx = i;
+                    }
                     GuiLine((Rectangle){ anchor.x + 24, anchor.y + 128 + (i * 48) + panelScrollOffset.y, layout[4].width + 32, 16 }, NULL);
                 }
             EndScissorMode();
+
+            // If a label was clicked, load that movie's data and
+            // set screen to MovieInfo
+            if (labelIdx > -1) {
+                p.movie.unload();
+                p.movie.load(results[labelIdx], acct);
+                p.sidebar.listActive = ScreenObjects::MOVIE_INFO;
+                entryText[0] = 0x0;
+                results.clear();
+                lastTextSize = 0;
+            }
         }
 
         // === Search panel variables =====================================
@@ -679,6 +695,7 @@ public:
             namePx = (Vector2){ 0, 0 };
             // And no movie poster
             UnloadTexture(texture);
+            texture = { 0 };
         }
 
         // === draw =======================================================
