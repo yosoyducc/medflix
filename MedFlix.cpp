@@ -258,11 +258,12 @@ void MedFlix::fillHash() {
     auto &props = db.getProperties();
     auto &sects = db.getSections();
     for(int i = 1; i< db.getSectionCount(); i++) {
+        //checks for duplicates
         std::vector<std::string> words;
+        //used to process movie names
         std::vector<char> letters;
         const std::string& currentName = sects[i];
         int once = 1;
-        //std::cout<<currentName<<std::endl;
         for(int j = 0; j<currentName.length(); j++) {
             if(currentName[j]==' ' || j==currentName.length()-1) {
                 //std::cout << currentName[j];
@@ -277,10 +278,12 @@ void MedFlix::fillHash() {
                     }
                 }
                 if(dup==false) {
+                    //each props vector per section stores a different property
                     MovieNode* newMovie= ht.set(currentWord,currentName,props[part].second.second,props[part+1].second.second,props[part+2].second.second,
                         props[part+3].second.second,props[part+4].second.second,props[part+5].second.second,props[part+6].second.second,
                         props[part+7].second.second);
                     std::string genre = props[part+3].second.second;
+                    //organizes by genre
                     if(once==1){
                         if(genre=="Action") {
                             ht.Action.push_back(newMovie);
@@ -302,6 +305,7 @@ void MedFlix::fillHash() {
                 letters.push_back(std::tolower(currentName[j]));
             }
         }
+        //increments parts to next secton
         part+=8;
         words.clear();
     }
