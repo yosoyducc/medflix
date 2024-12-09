@@ -233,7 +233,6 @@ std::vector<MovieNode *> HashTable::recommend(AccountManager const &accountReade
     srand(time(NULL));
     int size = 50;
     while(size>=0) {
-        std::cout << size << std::endl;
         int movie = recGenres[rand() % recGenres.size()];
         if (!userGenres[movie].empty()) {
             results.push_back(userGenres[movie].back());
