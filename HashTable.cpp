@@ -107,6 +107,10 @@ std::vector<MovieNode *> HashTable::search(string const &movieSearch) const {
     std::vector<char> letters;
     std::vector<string> words;
     std::vector<MovieNode*> results;
+
+    // If string is empty, return nothing
+    if (movieSearch.empty())
+        return results;
     for(int j = 0; j<movieSearch.length(); j++) {
         if(movieSearch[j]==' ' || j==movieSearch.length()-1) {
             if(j==movieSearch.length()-1&&isalnum(movieSearch[j])) {
