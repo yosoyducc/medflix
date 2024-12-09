@@ -78,7 +78,7 @@ public:
         // ================================================================
         void draw()
         {
-            char const *msg = "MedFlix 0.3.0  |  Copyright © 2024 Aiden Asar & Filip Vracevic. All Rights Reserved.";
+            char const *msg = "MedFlix 1.0.0  |  Copyright © 2024 Aiden Asar & Filip Vracevic. All Rights Reserved.";
 
             // Update dimensions
             layout.y = GetScreenHeight() - layout.height;
