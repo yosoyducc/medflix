@@ -48,6 +48,9 @@ MedFlix::MedFlix() : db("database.ini")
     // we'll be managing this ourselves
     SetExitKey(KEY_NULL);
 
+    // Initialize the hash table.
+    fillHash();
+
     /*** VARIABLES DEFINITIONS ***/
     // Define those program runtime booleans and ints
     exitCode = 0;
@@ -239,4 +242,57 @@ int MedFlix::exit()
     GuiLoadStyleDefault();
     CloseWindow();
     return exitCode;
+}
+
+
+/**** Private implementation ****/
+
+void MedFlix::fillHash() {
+    int part = 0;
+    auto &props = db.getProperties();
+    auto &sects = db.getSections();
+    for(int i = 1; i< db.getSectionCount(); i++) {
+        std::vector<std::string> words;
+        std::vector<char> letters;
+        const std::string& currentName = sects[i];
+        //std::cout<<currentName<<std::endl;
+        for(int j = 0; j<currentName.length(); j++) {
+            if(currentName[j]==' ' || j==currentName.length()-1) {
+                //std::cout << currentName[j];
+                if(j==currentName.length()-1&&isalnum(currentName[j])) {
+                    letters.push_back(std::tolower(currentName[j]));
+                }
+                std::string currentWord(letters.begin(), letters.end());
+                bool dup = false;
+                for(auto word : words) {
+                    if(word==currentWord) {
+                        dup = true;
+                    }
+                }
+                if(dup==false) {
+                    MovieNode* newMovie= ht.set(currentWord,currentName,props[part].second.second,props[part+1].second.second,props[part+2].second.second,
+                        props[part+3].second.second,props[part+4].second.second,props[part+5].second.second,props[part+6].second.second,
+                        props[part+7].second.second);
+                    std::string genre = props[part+3].second.second;
+                    if(genre=="Action") {
+                        ht.Action.push_back(newMovie);
+                    } else if(genre=="Drama") {
+                        ht.Drama.push_back(newMovie);
+                    } else if(genre=="Sci-Fi") {
+                        ht.Scifi.push_back(newMovie);
+                    } else if(genre=="Horror") {
+                        ht.Horror.push_back(newMovie);
+                    } else {
+                        ht.Comedy.push_back(newMovie);
+                    }
+                }
+                words.push_back(currentWord);
+                letters.clear();
+            } else if(isalnum(currentName[j])){
+                letters.push_back(std::tolower(currentName[j]));
+            }
+        }
+        part+=8;
+        words.clear();
+    }
 }
