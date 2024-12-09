@@ -117,7 +117,6 @@ void MedFlix::update()
                 // switch screen to Home
                 so.sidebar.listActive = ScreenObjects::HOME;
             } else {
-                // TODO: set label message to account sign in fail
                 so.account.setLabelMessage(so.account.SIGN_IN_FAIL);
             }
             break;
