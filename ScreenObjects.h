@@ -247,19 +247,19 @@ public:
             // Draw the panel backdrop
             GuiDummyRec(layout[0], nullptr);
             GuiLine(layout[1], header);
-            GuiScrollPanel(layout[2], nullptr, (Rectangle){ layout[2].x, layout[2].y, layout[2].width - 15, (float)contentHeight }, &panelScrollOffset, &view);
+            GuiScrollPanel(layout[2], nullptr, { layout[2].x, layout[2].y, layout[2].width - 15, (float)contentHeight }, &panelScrollOffset, &view);
             refreshPressed = GuiButton(layout[3], button);
 
             // Get which label the user clicked on
             int labelIdx = -1;
             BeginScissorMode(view.x, view.y, view.width, view.height);
                 for (int i = 0; i < recommended.size(); ++i) {
-                    if (GuiLabelButton((Rectangle){ anchor.x + 32, anchor.y + 40 + (i * 48) + panelScrollOffset.y, view.width - 24, 48 }, TextFormat("%s (%s, %s)", recommended[i]->name.data(), recommended[i]->year.data(), recommended[i]->genre.data()))) {
+                    if (GuiLabelButton({ anchor.x + 32, anchor.y + 40 + (i * 48) + panelScrollOffset.y, view.width - 24, 48 }, TextFormat("%s (%s, %s)", recommended[i]->name.data(), recommended[i]->year.data(), recommended[i]->genre.data()))) {
                         Vector2 mouse = GetMousePosition();
                         if (CheckCollisionPointRec(mouse, view))
                             labelIdx = i;
                     }
-                    GuiLine((Rectangle){ anchor.x + 24, anchor.y + 80 + (i * 48) + panelScrollOffset.y, view.width - 16, 16 }, NULL);
+                    GuiLine({ anchor.x + 24, anchor.y + 80 + (i * 48) + panelScrollOffset.y, view.width - 16, 16 }, nullptr);
                 }
             EndScissorMode();
 
@@ -267,7 +267,7 @@ public:
             if (labelIdx > -1) {
                 p.movie.unload();
                 p.movie.load(recommended[labelIdx], acct);
-                p.sidebar.listActive = ScreenObjects::MOVIE_INFO;
+                p.sidebar.listActive = MOVIE_INFO;
             }
         }
 
@@ -370,27 +370,27 @@ public:
             // Draw the panel backdrop
             GuiDummyRec(layout[0], nullptr);
             GuiLine(layout[1], header);
-            GuiScrollPanel(layout[2], nullptr, (Rectangle){ layout[2].x, layout[2].y, layout[2].width - 15, (float)contentHeight }, &panelScrollOffset, &view);
+            GuiScrollPanel(layout[2], nullptr, { layout[2].x, layout[2].y, layout[2].width - 15, (float)contentHeight }, &panelScrollOffset, &view);
             refreshPressed = GuiButton(layout[3], button);
 
             // Get which label the user clicked on, if any
             int labelIdx = -1;
             BeginScissorMode(view.x, view.y, view.width, view.height);
                 for (int i = 0; i < faves.size(); ++i) {
-                    if (GuiLabelButton((Rectangle){ anchor.x + 32, anchor.y + 40 + (i * 48) + panelScrollOffset.y, view.width - 24, 48 }, TextFormat("%s (%s)", faves[i]->name.data(), faves[i]->year.data()))) {
+                    if (GuiLabelButton({ anchor.x + 32, anchor.y + 40 + (i * 48) + panelScrollOffset.y, view.width - 24, 48 }, TextFormat("%s (%s)", faves[i]->name.data(), faves[i]->year.data()))) {
                         // Determine if mouse is inside area when clicked
                         Vector2 mouse = GetMousePosition();
                         if (CheckCollisionPointRec(mouse, view))
                             labelIdx = i;
                     }
-                    GuiLine((Rectangle){ anchor.x + 24, anchor.y + 80 + (i * 48) + panelScrollOffset.y, view.width - 16, 16 }, NULL);
+                    GuiLine({ anchor.x + 24, anchor.y + 80 + (i * 48) + panelScrollOffset.y, view.width - 16, 16 }, nullptr);
                 }
             EndScissorMode();
 
             if (labelIdx > -1) {
                 p.movie.unload();
                 p.movie.load(faves[labelIdx], acct);
-                p.sidebar.listActive = ScreenObjects::MOVIE_INFO;
+                p.sidebar.listActive = MOVIE_INFO;
             }
         }
 
@@ -502,9 +502,9 @@ public:
             int contentHeight = results.size() * 48;
 
             // Render elements to the screen
-            GuiDummyRec(layout[0], NULL);
-            GuiScrollPanel(layout[1], NULL, (Rectangle){ layout[1].x, layout[1].y, layout[1].width - 15, (float)contentHeight }, &panelScrollOffset, &view);
-            GuiLine((Rectangle){layout[1].x, layout[1].y, layout[1].width, 0}, NULL);
+            GuiDummyRec(layout[0], nullptr);
+            GuiScrollPanel(layout[1], nullptr, { layout[1].x, layout[1].y, layout[1].width - 15, (float)contentHeight }, &panelScrollOffset, &view);
+            GuiLine({layout[1].x, layout[1].y, layout[1].width, 0}, nullptr);
             GuiGroupBox(layout[2], groupText);
             // Only display hint if the user hasn't entered any text yet
             if (!entryText[0])
@@ -517,13 +517,13 @@ public:
             int labelIdx = -1;
             BeginScissorMode(view.x, view.y, view.width, view.height);
                 for (int i = 0; i < results.size(); ++i) {
-                    if (GuiLabelButton((Rectangle){ anchor.x + 32, anchor.y + 88 + (i * 48) + panelScrollOffset.y, layout[4].width, 48 }, TextFormat("%s (%s)", results[i]->name.data(), results[i]->year.data()))) {
+                    if (GuiLabelButton({ anchor.x + 32, anchor.y + 88 + (i * 48) + panelScrollOffset.y, layout[4].width, 48 }, TextFormat("%s (%s)", results[i]->name.data(), results[i]->year.data()))) {
                         // determine if mouse is inside the scissor area when clicked
                         Vector2 mouse = GetMousePosition();
                         if (CheckCollisionPointRec(mouse, view))
                             labelIdx = i;
                     }
-                    GuiLine((Rectangle){ anchor.x + 24, anchor.y + 128 + (i * 48) + panelScrollOffset.y, layout[4].width + 32, 16 }, NULL);
+                    GuiLine({ anchor.x + 24, anchor.y + 128 + (i * 48) + panelScrollOffset.y, layout[4].width + 32, 16 }, nullptr);
                 }
             EndScissorMode();
 
@@ -532,7 +532,7 @@ public:
             if (labelIdx > -1) {
                 p.movie.unload();
                 p.movie.load(results[labelIdx], acct);
-                p.sidebar.listActive = ScreenObjects::MOVIE_INFO;
+                p.sidebar.listActive = MOVIE_INFO;
                 entryText[0] = 0x0;
                 results.clear();
                 lastTextSize = 0;
@@ -748,7 +748,7 @@ public:
                 previous[i]     = false;
 
             // No movie name, so no movie name dimensions either
-            namePx = (Vector2){ 0, 0 };
+            namePx = { 0, 0 };
             // And no movie poster
             UnloadTexture(texture);
             texture = { 0 };
@@ -803,7 +803,7 @@ public:
             GuiLabel(layout[1], name);
             GuiSetStyle(DEFAULT, TEXT_SIZE, fontSize);
             GuiLabel(layout[2], info);
-            //GuiLine(layout[3], NULL);
+            //GuiLine(layout[3], nullptr);
             // Draw the right side (everything else)
             GuiGroupBox(layout[4], detail);
             GuiLabel(layout[5], tagDir);
@@ -811,11 +811,11 @@ public:
             GuiLabel(layout[7], tagImdb);
             GuiLabel(layout[8], tagAct);
             GuiLabel(layout[9], tagDesc);
-            GuiLine(layout[10], NULL);
-            GuiLine(layout[11], NULL);
-            GuiLine(layout[12], NULL);
-            GuiLine(layout[13], NULL);
-            GuiLine(layout[14], NULL);
+            GuiLine(layout[10], nullptr);
+            GuiLine(layout[11], nullptr);
+            GuiLine(layout[12], nullptr);
+            GuiLine(layout[13], nullptr);
+            GuiLine(layout[14], nullptr);
             GuiLabel(layout[15], director[0]);
             GuiLabel(layout[16], director[1]);
             GuiLabel(layout[17], director[2]);
@@ -835,7 +835,7 @@ public:
             GuiSetTooltip(loTip);
             GuiToggle(layout[23], loathe, &current[2]);
             // Disable tooltips again
-            GuiSetTooltip(NULL);
+            GuiSetTooltip(nullptr);
             GuiDisableTooltip();
             // Draw the description with wrapping.
             GuiSetStyle(DEFAULT, TEXT_ALIGNMENT_VERTICAL, TEXT_ALIGN_TOP);
