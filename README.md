@@ -55,9 +55,10 @@ MedFlix requires registration to use the program features.
 ### First time use
 
 On first launch, you'll need to register. To change login mode, click the
-dropdown on the upper right hand corner of the Account Manager window.
-Select "REGISTER", enter your credentials, and press "Register me!" Make
-sure to remember your password, because it's nearly impossible to recover!
+dropdown on the upper right hand corner of the Account Manager window
+and select "REGISTER". Alternatively, press F1 key to switch the mode.
+Then, enter your credentials, and press "Register me!" Make sure to
+remember your password, because it's nearly impossible to recover!
 
 From there, switch back to "SIGN IN" mode and just hit "Sign me in!" You'll
 be immediately redirected to the "Home" tab where recommendations appear.
@@ -68,11 +69,11 @@ When logged in, you have access to six tabs:
 
 1.  **Home**: A page with ~50 recommended movies. Click on any movie in the
     list to view more information about it. Requires a manual refresh,
-    press the refresh button in the upper right to request new
+    press the refresh button in the upper right or press F5 key to request new
     recommendations.
 
 2.  **Favorites**: List of favorited movies. Must be manually refreshed when
-    movies are added/removed from the list.
+    movies are added/removed from the list (refresh button or F5 key).
 
 3.  **Search (Filmhunter)**: Enables searching the movies database.
 
@@ -88,7 +89,7 @@ When logged in, you have access to six tabs:
 Rating a movie as "Watched" (the eye) or "Superliked" (the star) gives weight
 to movies like that one (movies in the same genre) for the recommendations
 system. If you exclusively like movies in Comedy, your recommendations will be
-over- saturated with Comedy, with some other genres thrown in for good measure.
+saturated with Comedy, with some other genres thrown in for good measure.
 You can also mark a movie as Liked (1UP) or Disliked (skull), but these do
 nothing right now.
 
