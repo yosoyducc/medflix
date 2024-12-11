@@ -20,6 +20,7 @@
 #pragma once
 
 #include "AccountManager.h"     // determine if we're signed in or not
+#include "Config.h"
 #include "IniReader.h"
 #include "HashTable.h"
 
@@ -78,7 +79,7 @@ public:
         // ================================================================
         void draw()
         {
-            char const *msg = "MedFlix 1.0.0  |  Copyright © 2024 Aiden Asar & Filip Vracevic. All Rights Reserved.";
+            char const *msg = APP_NAME " " APP_VERSION "  |  Copyright © " APP_YEAR " Aiden Asar & Filip Vracevic. All Rights Reserved.";
 
             // Update dimensions
             layout.y = GetScreenHeight() - layout.height;
