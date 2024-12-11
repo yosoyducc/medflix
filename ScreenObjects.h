@@ -235,10 +235,17 @@ public:
             layout[3].x      = anchor.x + layout[1].width + 24;
 
             // Update the local recommended list
-            if (refreshPressed) {
+            if (IsKeyPressed(KEY_F5) || refreshPressed) {
                 recommended.clear();
                 recommended = ht.recommend(acct, db);
             }
+
+            // Scroll if user presses up/down
+            if (IsKeyDown(KEY_DOWN))
+                // Speed of scroll is dependent on app framerate.
+                panelScrollOffset.y -= KEY_SCROLL_SPEED;
+            if (IsKeyDown(KEY_UP))
+                panelScrollOffset.y += KEY_SCROLL_SPEED;
 
             // Panel drawing vars
             Rectangle view;
@@ -350,7 +357,7 @@ public:
             layout[3].x      = anchor.x + layout[1].width + 24;
 
             // Update the local favorites list
-            if (refreshPressed) {
+            if (IsKeyPressed(KEY_F5) || refreshPressed) {
                 faves.clear();
                 IniReader const *user = acct.getUserData();
                 // Start at first section, not global
@@ -363,6 +370,12 @@ public:
                     }
                 }
             }
+
+            // Scroll if user presses up/down
+            if (IsKeyDown(KEY_DOWN))
+                panelScrollOffset.y -= KEY_SCROLL_SPEED;
+            if (IsKeyDown(KEY_UP))
+                panelScrollOffset.y += KEY_SCROLL_SPEED;
 
             // Panel drawing vars
             Rectangle view;
@@ -1121,6 +1134,9 @@ public:
 
             if (!acct.signedIn() && GuiDropdownBox(layout[1], dropdown, &dropActionActive, dropActionEditMode))
                 dropActionEditMode = !dropActionEditMode;
+            else if (IsKeyPressed(KEY_F1))
+                // Works because we only have two options (0 and 1).
+                dropActionActive = !dropActionActive;
 
             // Note to self: I don't think we need to worry about dropdown
             // status because in order to sign in we must specify SIGN IN.

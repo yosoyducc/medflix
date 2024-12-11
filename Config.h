@@ -25,4 +25,7 @@
 #define SCREEN_HEIGHT     540
 #define SCREEN_MIN_HEIGHT 450
 
+// raygui already defines SCROLL_SPEED
+#define KEY_SCROLL_SPEED    5
+
 #define TARGET_FPS  60
