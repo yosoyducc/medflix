@@ -6,6 +6,8 @@
 
 Netflix at home:
 
+![MedFlix screenshot of Movie Info page for Jaws](https://github.com/yosoyducc/medflix/blob/main/medflix.webp?raw=true)
+
 ## What???
 
 MedFlix is a program for movies management. This is our team's submission
