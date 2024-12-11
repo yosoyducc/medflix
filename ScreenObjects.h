@@ -501,6 +501,12 @@ public:
             // Search button is offset from layout[4] by 16
             layout[5].x     = layout[4].x + layout[4].width + 16;
 
+            // Scroll if user presses up/down
+            if (IsKeyDown(KEY_DOWN))
+                panelScrollOffset.y -= KEY_SCROLL_SPEED;
+            if (IsKeyDown(KEY_UP))
+                panelScrollOffset.y += KEY_SCROLL_SPEED;
+
             // Variables for drawing
             // TEMPORARY: get results from search instead...
             Rectangle view;
